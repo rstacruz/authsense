@@ -79,37 +79,27 @@
     model: Myapp.User
   }
 end</code></pre>
-<h2>Usage in Controllers</h2>
-<p><strong>Authenticate:</strong> To validate a login, use <code class="inline">authenticate/1</code>.
+<h2>Authentication</h2>
+<p>To validate a login, use <code class="inline">authenticate/1</code>.
 (See <a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a>)</p>
-<pre><code class="elixir">changeset = User.changeset(%User{}, user_params)
-Auth.authenticate(changeset)
-
-# Or you may use a tuple instead:
-Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })</code></pre>
-<p><strong>Logging in:</strong> Then to log in, use <code class="inline">set_current_user/2</code>.
+<pre><code class="elixir">Auth.authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
+Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
+<h2>Logging in/out</h2>
+<p>To log in, use <code class="inline">set_current_user/2</code>.
 (See <a href="Authsense.Actions.html#set_current_user/2"><code class="inline">Authsense.Actions.set_current_user/2</code></a>)</p>
-<pre><code class="elixir">  conn
-  |&gt; Auth.set_current_user(user)
-  |&gt; put_flash(:info, &quot;Welcome.&quot;)
-  |&gt; redirect(to: &quot;/&quot;)</code></pre>
-<p><strong>Logging out:</strong> Use the same function for logging out.</p>
-<pre><code class="elixir">  conn
-  |&gt; Auth.set_current_user(nil)
-  |&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
-  |&gt; redirect(to: &quot;/&quot;)</code></pre>
+<pre><code class="elixir">  conn |&gt; Auth.set_current_user(user)  # login
+  conn |&gt; Auth.set_current_user(nil)   # logout</code></pre>
+<h2>Get current user</h2>
 <p>To get authentication data, use <code class="inline">Auth</code> as a plug:
 (See <a href="Authsense.Plug.html"><code class="inline">Authsense.Plug</code></a>)</p>
 <pre><code class="elixir">plug Auth</code></pre>
 <p>When using this plug, you can then get the current user:</p>
-<pre><code class="elixir">conn.assigns.current_user</code></pre>
+<pre><code class="elixir">conn.assigns.current_user  #=&gt; %User{} | nil</code></pre>
 <h2>Usage in models</h2>
 <p>In your changeset, use <code class="inline">generate_hashed_password/1</code>.
 (See <a href="Authsense.Service.html#generate_hashed_password/2"><code class="inline">Authsense.Service.generate_hashed_password/2</code></a>)</p>
 <pre><code class="elixir">model
-|&gt; cast(params, @required_fields, @optional_fields)
-|&gt; Auth.generate_hashed_password()
-|&gt; validate_confirmation(:password, message: &quot;password confirmation doesn&#39;t match&quot;)</code></pre>
+|&gt; Auth.generate_hashed_password()</code></pre>
 <h2>Delegate functions</h2>
 <p>These are the available functions:</p>
 <ul>

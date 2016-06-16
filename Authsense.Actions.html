@@ -122,7 +122,7 @@
     </a>
     <span class="signature">set_current_user(conn, user)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/actions.ex#L19" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/actions.ex#L23" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -132,10 +132,14 @@
   <section class="docstring">
     <p>Sets the current user for the session.</p>
 <pre><code class="elixir">conn
-|&gt; set_current_user(user)</code></pre>
+|&gt; Auth.set_current_user(user)
+|&gt; put_flash(:info, &quot;Welcome.&quot;)
+|&gt; redirect(to: &quot;/&quot;)</code></pre>
 <p>To logout, set it to nil.</p>
 <pre><code class="elixir">conn
-|&gt; set_current_user(nil)</code></pre>
+|&gt; Auth.set_current_user(nil)
+|&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
+|&gt; redirect(to: &quot;/&quot;)</code></pre>
 <p>This sets the <code class="inline">:current_user_id</code> in the Session store. To access the User
 model, use <code class="inline">Auth</code> as a plug (see <a href="Authsense.Plug.html"><code class="inline">Authsense.Plug</code></a>).</p>
 
