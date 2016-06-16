@@ -46,6 +46,17 @@ defmodule Authsense do
       model
       |> Auth.generate_hashed_password()
 
+  ## Configuration
+  Set configuration using `use Authsense, %{...}`. These keys are available:
+
+  - `repo` (required) - the Ecto repo to connect to.
+  - `model` (required) - the user model to use.
+  - `crypto` - the crypto module to use. (default: `Comeonin.Pbkdf2`)
+  - `identity_field` - field that identifies the user. (default: `:email`)
+  - `password_Field` - virtual field that has the plaintext password. (default: `:password`)
+  - `hashed_password_field` - field where the password is stored. (default: `:hashed_password`)
+  - `login_error` - the error to add to the changeset on `Auth.authenticate/1`. (default: "Invalid credentials.")
+
   ## Delegate functions
   These are the available functions:
 
