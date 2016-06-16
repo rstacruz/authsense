@@ -37,19 +37,25 @@ end
 You can then call some helpers for authentication:
 
 ```elixir
-Auth.authenticate(changeset)
+# For login actions
+Auth.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
 Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
+```
 
+```elixir
+# For login/logout actions
 conn |> Auth.set_current_user(user)  # login
 conn |> Auth.set_current_user(nil)   # logout
 ```
 
 ```elixir
+# For model changesets
 changeset
 |> Auth.generate_hashed_password()
 ```
 
 ```elixir
+# For controllers
 plug Auth
 conn.assigns.current_user  #=> %User{} | nil
 ```
