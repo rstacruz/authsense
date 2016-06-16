@@ -74,10 +74,9 @@
 <h3>Basic use</h3>
 <p>Create your own module and use Authsense.</p>
 <pre><code class="elixir">defmodule Myapp.Auth do
-  use Authsense, %{
+  use Authsense,
     repo: Myapp.Auth,
     model: Myapp.User
-  }
 end</code></pre>
 <h2>Authentication</h2>
 <p>To validate a login, use <code class="inline">authenticate/1</code>.
@@ -101,7 +100,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 <pre><code class="elixir">model
 |&gt; Auth.generate_hashed_password()</code></pre>
 <h2>Configuration</h2>
-<p>Set configuration using <code class="inline">use Authsense, %{...}</code>. These keys are available:</p>
+<p>Set configuration using <code class="inline">use Authsense, repo: Myapp.Repo, ...</code>. These keys are available:</p>
 <ul>
 <li><code class="inline">repo</code> (required) - the Ecto repo to connect to.
 </li>
