@@ -4,7 +4,7 @@
 
 ## Installation
 
-1. Add authsense to your list of dependencies in `mix.exs`:
+Add authsense to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -13,7 +13,7 @@ def deps do
 end
 ```
 
-2. Ensure authsense is started before your application:
+Ensure authsense is started before your application:
 
 ```elixir
 def application do
