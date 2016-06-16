@@ -1,12 +1,22 @@
 defmodule Authsense.Mixfile do
   use Mix.Project
 
+  @version "0.0.1"
+  @description """
+  Sensible helpers for authentication for Phoenix/Ecto.
+  """
+
   def project do
     [app: :authsense,
-     version: "0.0.1",
+     version: @version,
+     description: @description,
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     source_url: "https://github.com/rstacruz/authsense",
+     homepage_url: "https://github.com/rstacruz/authsense",
+     docs: docs,
+     package: package,
      deps: deps]
   end
 
@@ -29,5 +39,25 @@ defmodule Authsense.Mixfile do
   defp deps do
     [{:ecto, ">= 1.0.0"},
      {:plug, ">= 1.0.0"}]
+  end
+
+  def package do
+    [
+      maintainers: ["Rico Sta. Cruz"],
+      licenses: ["MIT"],
+      files: ["lib", "mix.exs", "README.md"],
+      links: %{github: "https://github.com/rstacruz/expug"}
+    ]
+  end
+
+  def docs do
+    [
+      source_ref: "v#{@version}",
+      main: "readme",
+      extras: [
+        Path.wildcard("*.md") |
+        Path.wildcard("docs/**/*.md")
+      ]
+    ]
   end
 end
