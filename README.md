@@ -2,6 +2,8 @@
 
 > Sensible authentication helpers for Phoenix/Ecto
 
+[![Status](https://travis-ci.org/rstacruz/authsense.svg?branch=master)](https://travis-ci.org/rstacruz/authsense "See test builds")
+
 ## Installation
 
 Add authsense to your list of dependencies in `mix.exs`:
