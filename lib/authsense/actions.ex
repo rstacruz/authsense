@@ -6,12 +6,16 @@ defmodule Authsense.Actions do
   Sets the current user for the session.
 
       conn
-      |> set_current_user(user)
+      |> Auth.set_current_user(user)
+      |> put_flash(:info, "Welcome.")
+      |> redirect(to: "/")
 
   To logout, set it to nil.
 
       conn
-      |> set_current_user(nil)
+      |> Auth.set_current_user(nil)
+      |> put_flash(:info, "You've been logged out.")
+      |> redirect(to: "/")
 
   This sets the `:current_user_id` in the Session store. To access the User
   model, use `Auth` as a plug (see `Authsense.Plug`).

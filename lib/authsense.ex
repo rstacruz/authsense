@@ -12,31 +12,22 @@ defmodule Authsense do
         }
       end
 
-  ## Usage in Controllers
+  ## Authentication
 
-  __Authenticate:__ To validate a login, use `authenticate/1`.
+  To validate a login, use `authenticate/1`.
   (See `Authsense.Service.authenticate/2`)
 
-      changeset = User.changeset(%User{}, user_params)
-      Auth.authenticate(changeset)
+      Auth.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
+      Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
 
-      # Or you may use a tuple instead:
-      Auth.authenticate({ "userid", "password" })
-
-  __Logging in:__ Then to log in, use `set_current_user/2`.
+  ## Logging in/out
+  To log in, use `set_current_user/2`.
   (See `Authsense.Actions.set_current_user/2`)
 
-        conn
-        |> Auth.set_current_user(user)
-        |> put_flash(:info, "Welcome.")
-        |> redirect(to: "/")
+        conn |> Auth.set_current_user(user)  # login
+        conn |> Auth.set_current_user(nil)   # logout
 
-  __Logging out:__ Use the same function for logging out.
-
-        conn
-        |> Auth.set_current_user(nil)
-        |> put_flash(:info, "You've been logged out.")
-        |> redirect(to: "/")
+  ## Get current user
 
   To get authentication data, use `Auth` as a plug:
   (See `Authsense.Plug`)
@@ -45,7 +36,7 @@ defmodule Authsense do
 
   When using this plug, you can then get the current user:
 
-      conn.assigns.current_user
+      conn.assigns.current_user  #=> %User{} | nil
 
   ## Usage in models
 
@@ -53,9 +44,7 @@ defmodule Authsense do
   (See `Authsense.Service.generate_hashed_password/2`)
 
       model
-      |> cast(params, @required_fields, @optional_fields)
       |> Auth.generate_hashed_password()
-      |> validate_confirmation(:password, message: "password confirmation doesn't match")
 
   ## Delegate functions
   These are the available functions:
