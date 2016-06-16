@@ -6,10 +6,9 @@ defmodule Authsense do
   Create your own module and use Authsense.
 
       defmodule Myapp.Auth do
-        use Authsense, %{
+        use Authsense,
           repo: Myapp.Auth,
           model: Myapp.User
-        }
       end
 
   ## Authentication
@@ -47,7 +46,7 @@ defmodule Authsense do
       |> Auth.generate_hashed_password()
 
   ## Configuration
-  Set configuration using `use Authsense, %{...}`. These keys are available:
+  Set configuration using `use Authsense, repo: Myapp.Repo, ...`. These keys are available:
 
   - `repo` (required) - the Ecto repo to connect to.
   - `model` (required) - the user model to use.
@@ -82,7 +81,7 @@ defmodule Authsense do
 
   defmacro __using__(opts \\ []) do
     quote do
-      @auth_options Map.merge(Authsense.defaults, unquote(opts))
+      @auth_options Map.merge(Authsense.defaults, Enum.into(unquote(opts), %{}))
 
       def generate_hashed_password(conn), do:
         Authsense.Service.generate_hashed_password(@auth_options, conn)
