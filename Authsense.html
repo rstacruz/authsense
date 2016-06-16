@@ -100,6 +100,24 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 (See <a href="Authsense.Service.html#generate_hashed_password/2"><code class="inline">Authsense.Service.generate_hashed_password/2</code></a>)</p>
 <pre><code class="elixir">model
 |&gt; Auth.generate_hashed_password()</code></pre>
+<h2>Configuration</h2>
+<p>Set configuration using <code class="inline">use Authsense, %{...}</code>. These keys are available:</p>
+<ul>
+<li><code class="inline">repo</code> (required) - the Ecto repo to connect to.
+</li>
+<li><code class="inline">model</code> (required) - the user model to use.
+</li>
+<li><code class="inline">crypto</code> - the crypto module to use. (default: <code class="inline">Comeonin.Pbkdf2</code>)
+</li>
+<li><code class="inline">identity_field</code> - field that identifies the user. (default: <code class="inline">:email</code>)
+</li>
+<li><code class="inline">password_Field</code> - virtual field that has the plaintext password. (default: <code class="inline">:password</code>)
+</li>
+<li><code class="inline">hashed_password_field</code> - field where the password is stored. (default: <code class="inline">:hashed_password</code>)
+</li>
+<li><code class="inline">login_error</code> - the error to add to the changeset on <code class="inline">Auth.authenticate/1</code>. (default: “Invalid credentials.”)
+</li>
+</ul>
 <h2>Delegate functions</h2>
 <p>These are the available functions:</p>
 <ul>
