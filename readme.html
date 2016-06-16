@@ -19,7 +19,7 @@
 <section class="sidebar">
 
   
-  <a href="readme.html" class="sidebar-projectLink">
+  <a href="Authsense.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         authsense
@@ -70,7 +70,8 @@ end</code></pre>
 <pre><code class="elixir">def application do
   [applications: [:authsense]]
 end</code></pre>
-<h2 id="overview"> Overview</h2><p>Create a module:</p>
+<h2 id="overview"> Overview</h2><p>Please consult the <a href="http://ricostacruz.com/authsense/">Authsense documentation</a> for full details.</p>
+<p>Create a module:</p>
 <pre><code class="elixir">defmodule Myapp.Auth do
   use Authsense, %{
     repo: Myapp.Auth,
@@ -90,7 +91,7 @@ changeset
 <pre><code class="elixir"># For controllers
 plug Auth
 conn.assigns.current_user  #=&gt; %User{} | nil</code></pre>
-<p>See hexdocs for more info.</p>
+<p>Please consult the <a href="http://ricostacruz.com/authsense/">Authsense documentation</a> for more.</p>
 <h2 id="thanks"> Thanks</h2><p><strong>authsense</strong> © 2016+, Rico Sta. Cruz. Released under the <a href="http://mit-license.org/" title="">MIT</a> License.<br>
 Authored and maintained by Rico Sta. Cruz with help from contributors (<a href="http://github.com/rstacruz/authsense/contributors" title="">list</a>).</p>
 <blockquote><p><a href="http://ricostacruz.com">ricostacruz.com</a> &nbsp;&middot;&nbsp;
