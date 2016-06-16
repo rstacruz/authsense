@@ -57,7 +57,7 @@ defmodule Authsense.Mixfile do
   def docs do
     [
       source_ref: "v#{@version}",
-      main: "readme",
+      main: "Authsense",
       extras: [
         Path.wildcard("*.md") |
         Path.wildcard("docs/**/*.md")

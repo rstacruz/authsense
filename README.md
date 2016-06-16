@@ -25,6 +25,8 @@ end
 
 ## Overview
 
+Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for full details.
+
 Create a module:
 
 ```elixir
@@ -62,7 +64,7 @@ plug Auth
 conn.assigns.current_user  #=> %User{} | nil
 ```
 
-See hexdocs for more info.
+Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for more.
 
 ## Thanks
 
