@@ -64,7 +64,7 @@ defmodule Authsense do
       identity_field: :email,
       password_field: :password,
       hashed_password_field: :hashed_password,
-      login_error: "Invalid credentials.",
+      login_error: "Invalid credentials, foo.",
       repo: nil,
       model: nil
     }

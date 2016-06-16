@@ -61,7 +61,7 @@ defmodule Authsense.Service do
   def load_user(opts, email) do
     %{repo: repo, model: model, identity_field: id} = opts
 
-    user = try do
+    try do
       repo.get_by(model, [{id, email}])
     rescue _ ->
       nil
