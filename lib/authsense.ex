@@ -1,6 +1,6 @@
 defmodule Authsense do
   @moduledoc """
-  Authentication.
+  Sensible authentication helpers for Phoenix/Ecto.
 
   ### Basic use
   Create your own module and use Authsense.
@@ -56,8 +56,18 @@ defmodule Authsense do
       |> cast(params, @required_fields, @optional_fields)
       |> Auth.generate_hashed_password()
       |> validate_confirmation(:password, message: "password confirmation doesn't match")
+
+  ## Delegate functions
+  These are the available functions:
+
+  - `Authsense.Service.generate_hashed_password/2`
+  - `Authsense.Service.authenticate/2`
+  - `Authsense.Service.load_user/2`
+  - `Authsense.Actions.set_current_user/2`
+  - `Authsense.Plug`
   """
 
+  @doc false
   def defaults do
     %{
       crypto: Comeonin.Pbkdf2,

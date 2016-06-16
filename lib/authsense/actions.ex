@@ -12,6 +12,9 @@ defmodule Authsense.Actions do
 
       conn
       |> set_current_user(nil)
+
+  This sets the `:current_user_id` in the Session store. To access the User
+  model, use `Auth` as a plug (see `Authsense.Plug`).
   """
   def set_current_user(conn, nil) do
     delete_session(conn, :current_user_id)

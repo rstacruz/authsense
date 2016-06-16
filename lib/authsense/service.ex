@@ -70,6 +70,26 @@ defmodule Authsense.Service do
 
   @doc """
   Updates an `Ecto.Changeset` to generate a hashed password.
+  
+  If the changeset has `:password` in it, it will be hashed and stored as
+  `:hashed_password`.  (Fields can be configured in `Authsense`.)
+
+      changeset
+      |> Auth.generate_hashed_password()
+
+  It's typically used in a model's `changeset/2` function.
+
+      defmodule Example.User do
+        use Example.Web, :model
+
+        def changeset(model, params \\ :empty) do
+          model
+          |> cast(params, @required_fields, @optional_fields)
+          |> Auth.generate_hashed_password()
+          |> validate_confirmation(:password, message: "password confirmation doesn't match")
+          |> unique_constraint(:email)
+        end
+      end
   """
   def generate_hashed_password(opts, changeset) do
     %{password_field: passwd, hashed_password_field: hashed_passwd,
