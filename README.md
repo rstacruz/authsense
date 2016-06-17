@@ -31,10 +31,9 @@ Create a module:
 
 ```elixir
 defmodule Myapp.Auth do
-  use Authsense, %{
+  use Authsense,
     repo: Myapp.Auth,
     model: Myapp.User
-  }
 end
 ```
 
