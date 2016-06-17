@@ -148,7 +148,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     <a href="#c:assign_current_user/2">assign_current_user(arg0, atom)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Plug callback to check if a user has already logged in</p>
+    <div class="summary-synopsis"><p>Sets the <code class="inline">:current_user</code> assigns variable based on session</p>
 </div>
   
 </div>
@@ -216,7 +216,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     </a>
     <span class="signature">assign_current_user(arg0, atom)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L190" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L188" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -233,15 +233,14 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     </div>
   
   <section class="docstring">
-    <p>Plug callback to check if a user has already logged in.</p>
-<p>Authsense can be used as a plug. Use <code class="inline">plug Auth</code> on controllers that you need
-to have access to a user.</p>
+    <p>Sets the <code class="inline">:current_user</code> assigns variable based on session.</p>
 <pre><code class="elixir">defmodule Auth do
   use Authsense, # ...
 end
 
 # in your controller or pipeline:
-plug Auth</code></pre>
+import Auth
+plug :assign_current_user</code></pre>
 <p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
 to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
 <pre><code class="elixir">conn.assigns.current_user

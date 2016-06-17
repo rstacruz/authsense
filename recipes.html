@@ -131,10 +131,10 @@ end</code></pre>
 <pre><code class="elixir">defmodule Myapp.MyController do
   import Auth
 
-  plug Auth
+  plug :assign_current_user
   plug :ensure_authenticated
 end</code></pre>
-<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <code class="inline">plug Auth</code> (see <code class="inline">Auth.call/2</code>) to
+<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <code class="inline">Auth.set_current_user/2</code> to
 authenticate based on something else other than passwords.</p>
 <pre><code class="elixir">def authenticate_by_token(conn, _opts \\ []) do
   token = conn.params.token
@@ -145,6 +145,12 @@ authenticate based on something else other than passwords.</p>
       conn
   end
 end</code></pre>
+<pre><code class="elixir"># web/router.ex
+pipeline :api do
+  plug :authenticate_by_token
+end
+
+# add `import Auth` to your web/web.ex</code></pre>
 <h2 id="forgot-your-password"> Forgot your password</h2><p>You’ll need to create 4 actions: one for the “forgot your password” page, one
 for the “reset your password” page, and one submission action for each of those.</p>
 <p>You’ll also need a <code class="inline">:perishable_token</code> in your User model.</p>
