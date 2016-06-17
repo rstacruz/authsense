@@ -108,25 +108,11 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 </li>
 <li><code class="inline">identity_field</code> - field that identifies the user. (default: <code class="inline">:email</code>)
 </li>
-<li><code class="inline">password_Field</code> - virtual field that has the plaintext password. (default: <code class="inline">:password</code>)
+<li><code class="inline">password_field</code> - virtual field that has the plaintext password. (default: <code class="inline">:password</code>)
 </li>
 <li><code class="inline">hashed_password_field</code> - field where the password is stored. (default: <code class="inline">:hashed_password</code>)
 </li>
 <li><code class="inline">login_error</code> - the error to add to the changeset on <code class="inline">Auth.authenticate/1</code>. (default: “Invalid credentials.”)
-</li>
-</ul>
-<h2>Delegate functions</h2>
-<p>These are the available functions:</p>
-<ul>
-<li><a href="Authsense.Service.html#generate_hashed_password/2"><code class="inline">Authsense.Service.generate_hashed_password/2</code></a>
-</li>
-<li><a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a>
-</li>
-<li><a href="Authsense.Service.html#load_user/2"><code class="inline">Authsense.Service.load_user/2</code></a>
-</li>
-<li><a href="Authsense.Actions.html#set_current_user/2"><code class="inline">Authsense.Actions.set_current_user/2</code></a>
-</li>
-<li><a href="Authsense.Plug.html"><code class="inline">Authsense.Plug</code></a>
 </li>
 </ul>
 
@@ -163,7 +149,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:call/2">call(%, any)</a>
+    <a href="#c:call/2">call(arg0, any)</a>
   </div>
   
     <div class="summary-synopsis"><p>Authsense can be used as a plug</p>
@@ -181,7 +167,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:init/2">init(%, any)</a>
+    <a href="#c:init/2">init(arg0, any)</a>
   </div>
   
 </div>
@@ -196,7 +182,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:set_current_user/2">set_current_user(%, arg1)</a>
+    <a href="#c:set_current_user/2">set_current_user(arg0, arg1)</a>
   </div>
   
     <div class="summary-synopsis"><p>Sets the current user for the session</p>
@@ -231,7 +217,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
     </a>
     <span class="signature">authenticate(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L119" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L110" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -272,9 +258,9 @@ end</code></pre>
     <a href="#c:call/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(%, any)</span>
+    <span class="signature">call(arg0, any)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L174" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L165" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -285,7 +271,7 @@ end</code></pre>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">call(%Plug.Conn{adapter: term, assigns: term, before_send: term, body_params: term, cookies: term, halted: term, host: term, method: term, owner: term, params: term, path_info: term, peer: term, port: term, private: term, query_params: term, query_string: term, remote_ip: term, req_cookies: term, req_headers: term, request_path: term, resp_body: term, resp_cookies: term, resp_headers: term, scheme: term, script_name: term, secret_key_base: term, state: term, status: term}, any) :: %Plug.Conn{adapter: term, assigns: term, before_send: term, body_params: term, cookies: term, halted: term, host: term, method: term, owner: term, params: term, path_info: term, peer: term, port: term, private: term, query_params: term, query_string: term, remote_ip: term, req_cookies: term, req_headers: term, request_path: term, resp_body: term, resp_cookies: term, resp_headers: term, scheme: term, script_name: term, secret_key_base: term, state: term, status: term}</code></pre>
+          <pre><code class="elixir">call(Plug.Conn.t, any) :: Plug.Conn.t</code></pre>
         
       </div>
     </div>
@@ -317,7 +303,7 @@ to the User model if logged in, or to <code class="inline">nil</code> if logged 
     </a>
     <span class="signature">generate_hashed_password(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L101" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L92" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -361,9 +347,9 @@ implementation.</p>
     <a href="#c:init/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(%, any)</span>
+    <span class="signature">init(arg0, any)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L175" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L166" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -374,7 +360,7 @@ implementation.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">init(%Plug.Conn{adapter: term, assigns: term, before_send: term, body_params: term, cookies: term, halted: term, host: term, method: term, owner: term, params: term, path_info: term, peer: term, port: term, private: term, query_params: term, query_string: term, remote_ip: term, req_cookies: term, req_headers: term, request_path: term, resp_body: term, resp_cookies: term, resp_headers: term, scheme: term, script_name: term, secret_key_base: term, state: term, status: term}, any) :: nil</code></pre>
+          <pre><code class="elixir">init(Plug.Conn.t, any) :: nil</code></pre>
         
       </div>
     </div>
@@ -390,7 +376,7 @@ implementation.</p>
     </a>
     <span class="signature">load_user(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L129" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L120" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -417,9 +403,9 @@ implementation.</p>
     <a href="#c:set_current_user/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_current_user(%, arg1)</span>
+    <span class="signature">set_current_user(arg0, arg1)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L150" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L141" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -430,7 +416,7 @@ implementation.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_current_user(%Plug.Conn{adapter: term, assigns: term, before_send: term, body_params: term, cookies: term, halted: term, host: term, method: term, owner: term, params: term, path_info: term, peer: term, port: term, private: term, query_params: term, query_string: term, remote_ip: term, req_cookies: term, req_headers: term, request_path: term, resp_body: term, resp_cookies: term, resp_headers: term, scheme: term, script_name: term, secret_key_base: term, state: term, status: term}, Ecto.Schema.t | nil) :: %Plug.Conn{adapter: term, assigns: term, before_send: term, body_params: term, cookies: term, halted: term, host: term, method: term, owner: term, params: term, path_info: term, peer: term, port: term, private: term, query_params: term, query_string: term, remote_ip: term, req_cookies: term, req_headers: term, request_path: term, resp_body: term, resp_cookies: term, resp_headers: term, scheme: term, script_name: term, secret_key_base: term, state: term, status: term}</code></pre>
+          <pre><code class="elixir">set_current_user(Plug.Conn.t, Ecto.Schema.t | nil) :: Plug.Conn.t</code></pre>
         
       </div>
     </div>
