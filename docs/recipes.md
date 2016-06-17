@@ -112,14 +112,14 @@ Use it as a plug after using `Auth`.
 defmodule Myapp.MyController do
   import Auth
 
-  plug Auth
+  plug :assign_current_user
   plug :ensure_authenticated
 end
 ```
 
 ## Token-based authentication
 
-You can implement your own version of `plug Auth` (see `Auth.call/2`) to
+You can implement your own version of `Auth.set_current_user/2` to
 authenticate based on something else other than passwords.
 
 ```elixir
@@ -132,6 +132,15 @@ def authenticate_by_token(conn, _opts \\ []) do
       conn
   end
 end
+```
+
+```elixir
+# web/router.ex
+pipeline :api do
+  plug :authenticate_by_token
+end
+
+# add `import Auth` to your web/web.ex
 ```
 
 ## Forgot your password

@@ -164,17 +164,15 @@ defmodule Authsense do
     Plug.Conn.t
 
   @doc """
-  Plug callback to check if a user has already logged in.
-
-  Authsense can be used as a plug. Use `plug Auth` on controllers that you need
-  to have access to a user.
+  Sets the `:current_user` assigns variable based on session.
 
       defmodule Auth do
         use Authsense, # ...
       end
 
       # in your controller or pipeline:
-      plug Auth
+      import Auth
+      plug :assign_current_user
 
   By doing so, you'll get access to the `:current_user` assigns. It will be set
   to the User model if logged in, or to `nil` if logged out.
