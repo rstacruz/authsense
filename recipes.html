@@ -69,7 +69,7 @@ allows you to have your forms ask users for their <code class="inline">:password
 
   timestamps
 end</code></pre>
-<p>Use <code class="inline">Auth.generate_hashed_password()</code> for their changesets. This way, when
+<p>Use <code class="inline">Auth.generate_hashed_password/2</code> for their changesets. This way, when
 updating or creating users, any new <code class="inline">:password</code> fields will be hashed into
 <code class="inline">:hashed_password</code>.</p>
 <pre><code class="elixir">def changeset(model, params \\ :empty) do
@@ -148,42 +148,38 @@ end</code></pre>
 <h2 id="forgot-your-password"> Forgot your password</h2><p>You’ll need to create 4 actions: one for the “forgot your password” page, one
 for the “reset your password” page, and one submission action for each of those.</p>
 <p>You’ll also need a <code class="inline">:perishable_token</code> in your User model.</p>
+<h3>GET /forgot_password</h3>
 <ul>
-<li><p><code class="inline">GET /forgot_password</code></p>
+<li>Show the “enter your email” form.
 </li>
-<li><p>Show the “enter your email” form.</p>
-</li>
-<li><p><code class="inline">POST /forgot_password</code></p>
-</li>
+</ul>
+<h3>POST /forgot_password</h3>
+<ul>
 <li><p>Update the user’s perishable token.</p>
-<pre><code class="elixir">    user
-    |&gt; change(:perishable_token, Ecto.UUID.generate)
-    |&gt; Repo.update()
-    ```
-</code></pre>
+<pre><code class="elixir">user
+|&gt; change(:perishable_token, Ecto.UUID.generate)
+|&gt; Repo.update()</code></pre>
 </li>
-<li><p>Send an email to the user with a link to <code class="inline">/update_password?token=...</code>.</p>
+<li>Send an email to the user with a link to <code class="inline">/update_password?token=...</code>.
 </li>
-<li><p><code class="inline">GET /update_password?token=...</code></p>
-</li>
+</ul>
+<h3>GET /update_password?token=…</h3>
+<ul>
 <li><p>Find the user with the given token.</p>
-<pre><code class="elixir">    Repo.get_by(User, perishable_token: token)
-    ```
-</code></pre>
+<pre><code class="elixir">Repo.get_by(User, perishable_token: token)</code></pre>
 </li>
-<li><p>Show the “enter your new password” form.</p>
+<li>Show the “enter your new password” form.
 </li>
-<li><p><code class="inline">POST /update_password?token=...</code></p>
-</li>
+</ul>
+<h3>POST /update_password?token=…</h3>
+<ul>
 <li>Find the user with the given token.
 </li>
 <li><p>Update their password and clear their perishable token.</p>
-<pre><code class="elixir">    user
-    |&gt; User.changeset(user_params)
-    |&gt; change(:perishable_token, nil)
-    |&gt; Repo.update()
-    ```
-</code></pre>
+<pre><code class="elixir">user
+|&gt; User.changeset(user_params)
+|&gt; change(:perishable_token, nil)
+|&gt; Repo.update()</code></pre>
 </li>
 </ul>
 
