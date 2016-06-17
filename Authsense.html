@@ -143,7 +143,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
     <a href="#c:authenticate/1">authenticate(arg0)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Checks if someone can authenticate. Works on both Ecto changesets or tuples</p>
+    <div class="summary-synopsis"><p>Checks if someone can authenticate with a given username/password pair</p>
 </div>
   
 </div>
@@ -152,7 +152,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
     <a href="#c:call/2">call(arg0, any)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Authsense can be used as a plug</p>
+    <div class="summary-synopsis"><p>Plug callback to check if a user has already logged in</p>
 </div>
   
 </div>
@@ -217,7 +217,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
     </a>
     <span class="signature">authenticate(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L110" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L125" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -237,15 +237,26 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
     </div>
   
   <section class="docstring">
-    <p>Checks if someone can authenticate. Works on both Ecto changesets or tuples.</p>
+    <p>Checks if someone can authenticate with a given username/password pair.</p>
+<p>Works on both Ecto changesets or tuples.</p>
+<pre><code class="elixir">%User{}
+|&gt; change(%{ email: &quot;rico@gmail.com&quot;, password: &quot;password&quot; })
+|&gt; Auth.authenticate
+
+Auth.authenticate({ &quot;rico@gmail.com&quot;, &quot;password&quot; })</code></pre>
+<p>Returns <code class="inline">{:ok, user}</code> on success, or <code class="inline">{:error, changeset}</code> on failure. If
+used as a tuple, it returns <code class="inline">{:error, nil}</code> on failure.</p>
+<p>Typically used within a login action.</p>
 <pre><code class="elixir">def login_create(conn, %{&quot;user&quot; =&gt; user_params}) do
   changeset = User.changeset(%User{}, user_params)
+
   case Auth.authenticate(changeset) do
     {:ok, user} -&gt;
       conn
       |&gt; Auth.set_current_user(user)
       |&gt; put_flash(:info, &quot;Welcome.&quot;)
       |&gt; redirect(to: &quot;/&quot;)
+
     {:error, changeset} -&gt;
       render(conn, &quot;login.html&quot;, changeset: changeset)
   end
@@ -260,7 +271,7 @@ end</code></pre>
     </a>
     <span class="signature">call(arg0, any)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L165" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L183" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -277,12 +288,14 @@ end</code></pre>
     </div>
   
   <section class="docstring">
-    <p>Authsense can be used as a plug.</p>
+    <p>Plug callback to check if a user has already logged in.</p>
+<p>Authsense can be used as a plug. Use <code class="inline">plug Auth</code> on controllers that you need
+to have access to a user.</p>
 <pre><code class="elixir">defmodule Auth do
-  use Authsense, %{ ... }
+  use Authsense, # ...
 end
 
-# in your controller:
+# in your controller or pipeline:
 plug Auth</code></pre>
 <p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
 to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
@@ -349,7 +362,7 @@ implementation.</p>
     </a>
     <span class="signature">init(any)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L168" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L186" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -376,7 +389,7 @@ implementation.</p>
     </a>
     <span class="signature">load_user(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L120" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L135" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -405,7 +418,7 @@ implementation.</p>
     </a>
     <span class="signature">set_current_user(arg0, arg1)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L141" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L156" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
