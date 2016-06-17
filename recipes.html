@@ -134,7 +134,7 @@ end</code></pre>
   plug :assign_current_user
   plug :ensure_authenticated
 end</code></pre>
-<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <code class="inline">Auth.set_current_user/2</code> to
+<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <code class="inline">Auth.assign_current_user/2</code> to
 authenticate based on something else other than passwords.</p>
 <pre><code class="elixir">def authenticate_by_token(conn, _opts \\ []) do
   token = conn.params.token
