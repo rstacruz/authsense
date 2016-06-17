@@ -17,7 +17,7 @@ schema "users" do
 end
 ```
 
-Use `Auth.generate_hashed_password()` for their changesets. This way, when
+Use `Auth.generate_hashed_password/2` for their changesets. This way, when
 updating or creating users, any new `:password` fields will be hashed into
 `:hashed_password`.
 
@@ -141,40 +141,34 @@ for the "reset your password" page, and one submission action for each of those.
 
 You'll also need a `:perishable_token` in your User model.
 
-* `GET /forgot_password`
+### GET /forgot_password
 
    - Show the "enter your email" form.
 
-* `POST /forgot_password`
+### POST /forgot_password
 
   - Update the user's perishable token.
 
-    ```elixir
-    user
-    |> change(:perishable_token, Ecto.UUID.generate)
-    |> Repo.update()
-    ```
+        user
+        |> change(:perishable_token, Ecto.UUID.generate)
+        |> Repo.update()
 
   - Send an email to the user with a link to `/update_password?token=...`.
 
-* `GET /update_password?token=...`
+### GET /update_password?token=...
 
   - Find the user with the given token.
 
-    ```elixir
-    Repo.get_by(User, perishable_token: token)
-    ```
+        Repo.get_by(User, perishable_token: token)
 
   - Show the "enter your new password" form.
 
-* `POST /update_password?token=...`
+### POST /update_password?token=...
 
   - Find the user with the given token.
   - Update their password and clear their perishable token.
 
-    ```elixir
-    user
-    |> User.changeset(user_params)
-    |> change(:perishable_token, nil)
-    |> Repo.update()
-    ```
+        user
+        |> User.changeset(user_params)
+        |> change(:perishable_token, nil)
+        |> Repo.update()

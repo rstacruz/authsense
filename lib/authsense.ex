@@ -48,6 +48,11 @@ defmodule Authsense do
   - `password_field` - virtual field that has the plaintext password. (default: `:password`)
   - `hashed_password_field` - field where the password is stored. (default: `:hashed_password`)
   - `login_error` - the error to add to the changeset on `Auth.authenticate/1`. (default: "Invalid credentials.")
+
+  ## Recipes
+
+  For information on how to build login pages, secure your website, and other
+  things: see [Recipes](recipes.html).
   """
 
   @doc false
