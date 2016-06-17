@@ -45,18 +45,9 @@ defmodule Authsense do
   - `model` (required) - the user model to use.
   - `crypto` - the crypto module to use. (default: `Comeonin.Pbkdf2`)
   - `identity_field` - field that identifies the user. (default: `:email`)
-  - `password_Field` - virtual field that has the plaintext password. (default: `:password`)
+  - `password_field` - virtual field that has the plaintext password. (default: `:password`)
   - `hashed_password_field` - field where the password is stored. (default: `:hashed_password`)
   - `login_error` - the error to add to the changeset on `Auth.authenticate/1`. (default: "Invalid credentials.")
-
-  ## Delegate functions
-  These are the available functions:
-
-  - `Authsense.Service.generate_hashed_password/2`
-  - `Authsense.Service.authenticate/2`
-  - `Authsense.Service.load_user/2`
-  - `Authsense.Actions.set_current_user/2`
-  - `Authsense.Plug`
   """
 
   @doc false
@@ -147,8 +138,8 @@ defmodule Authsense do
   This sets the `:current_user_id` in the Session store. To access the User
   model, use `Auth` as a plug (see `Authsense.Plug`).
   """
-  @callback set_current_user(%Plug.Conn{}, Ecto.Schema.t | nil) ::
-    %Plug.Conn{}
+  @callback set_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
+    Plug.Conn.t
 
   @doc """
   Authsense can be used as a plug.
@@ -171,8 +162,8 @@ defmodule Authsense do
         You are not logged in.
       <% end %>
   """
-  @callback call(%Plug.Conn{}, any) :: %Plug.Conn{}
-  @callback init(%Plug.Conn{}, any) :: nil
+  @callback call(Plug.Conn.t, any) :: Plug.Conn.t
+  @callback init(Plug.Conn.t, any) :: nil
 
   defmacro __using__(opts \\ []) do
     quote do
