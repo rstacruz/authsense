@@ -92,16 +92,31 @@ defmodule Authsense do
   @callback generate_hashed_password(Ecto.Changeset.t) :: Ecto.Changeset.t
 
   @doc """
-  Checks if someone can authenticate. Works on both Ecto changesets or tuples.
+  Checks if someone can authenticate with a given username/password pair.
+  
+  Works on both Ecto changesets or tuples.
+
+      %User{}
+      |> change(%{ email: "rico@gmail.com", password: "password" })
+      |> Auth.authenticate
+
+      Auth.authenticate({ "rico@gmail.com", "password" })
+
+  Returns `{:ok, user}` on success, or `{:error, changeset}` on failure. If
+  used as a tuple, it returns `{:error, nil}` on failure.
+
+  Typically used within a login action.
 
       def login_create(conn, %{"user" => user_params}) do
         changeset = User.changeset(%User{}, user_params)
+
         case Auth.authenticate(changeset) do
           {:ok, user} ->
             conn
             |> Auth.set_current_user(user)
             |> put_flash(:info, "Welcome.")
             |> redirect(to: "/")
+
           {:error, changeset} ->
             render(conn, "login.html", changeset: changeset)
         end
@@ -142,13 +157,16 @@ defmodule Authsense do
     Plug.Conn.t
 
   @doc """
-  Authsense can be used as a plug.
+  Plug callback to check if a user has already logged in.
+
+  Authsense can be used as a plug. Use `plug Auth` on controllers that you need
+  to have access to a user.
 
       defmodule Auth do
-        use Authsense, %{ ... }
+        use Authsense, # ...
       end
 
-      # in your controller:
+      # in your controller or pipeline:
       plug Auth
 
   By doing so, you'll get access to the `:current_user` assigns. It will be set
