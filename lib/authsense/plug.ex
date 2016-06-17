@@ -1,24 +1,6 @@
 defmodule Authsense.Plug do
   @moduledoc """
-  Authsense can be used as a plug.
-
-      defmodule Auth do
-        use Authsense, %{ ... }
-      end
-
-      # in your controller:
-      plug Auth
-
-  By doing so, you'll get access to the `:current_user` assigns. It will be set
-  to the User model if logged in, or to `nil` if logged out.
-
-      conn.assigns.current_user
-
-      <%= if @current_user %>
-        Hello, <%= @current_user.name %>
-      <% else %>
-        You are not logged in.
-      <% end %>
+  See `Authsense.call/2`.
   """
 
   import Plug.Conn, only: [get_session: 2, assign: 3]

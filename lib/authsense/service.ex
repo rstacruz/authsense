@@ -3,20 +3,7 @@ defmodule Authsense.Service do
     [get_change: 2, put_change: 3, validate_change: 3]
 
   @doc """
-  Checks if someone can authenticate. Works on both Ecto changesets or tuples.
-
-      def login_create(conn, %{"user" => user_params}) do
-        changeset = User.changeset(%User{}, user_params)
-        case Auth.authenticate(changeset) do
-          {:ok, user} ->
-            conn
-            |> Auth.set_current_user(user)
-            |> put_flash(:info, "Welcome.")
-            |> redirect(to: "/")
-          {:error, changeset} ->
-            render(conn, "login.html", changeset: changeset)
-        end
-      end
+  See `Authsense.authenticate/2`.
   """
   def authenticate(opts, changeset) do
     case authenticate_user(opts, changeset) do
@@ -54,9 +41,7 @@ defmodule Authsense.Service do
   end
 
   @doc """
-  Loads a user by a given identity field value. Returns a nil on failure.
-
-      load_user("rico@gmail.com")  #=> %User{...}
+  See `Authsense.load_user/1`.
   """
   def load_user(opts, email) do
     %{repo: repo, model: model, identity_field: id} = opts
@@ -69,27 +54,7 @@ defmodule Authsense.Service do
   end
 
   @doc """
-  Updates an `Ecto.Changeset` to generate a hashed password.
-  
-  If the changeset has `:password` in it, it will be hashed and stored as
-  `:hashed_password`.  (Fields can be configured in `Authsense`.)
-
-      changeset
-      |> Auth.generate_hashed_password()
-
-  It's typically used in a model's `changeset/2` function.
-
-      defmodule Example.User do
-        use Example.Web, :model
-
-        def changeset(model, params \\ :empty) do
-          model
-          |> cast(params, @required_fields, @optional_fields)
-          |> Auth.generate_hashed_password()
-          |> validate_confirmation(:password, message: "password confirmation doesn't match")
-          |> unique_constraint(:email)
-        end
-      end
+  See `Authsense.generate_hashed_password/1`.
   """
   def generate_hashed_password(opts, changeset) do
     %{password_field: passwd, hashed_password_field: hashed_passwd,
