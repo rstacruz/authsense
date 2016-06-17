@@ -165,7 +165,7 @@ defmodule Authsense do
   @callback call(Plug.Conn.t, any) :: Plug.Conn.t
 
   @doc false
-  @callback init(Plug.Conn.t, any) :: nil
+  @callback init(any) :: nil
 
   defmacro __using__(opts \\ []) do
     quote do
