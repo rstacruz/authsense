@@ -73,10 +73,9 @@ end</code></pre>
 <h2 id="overview"> Overview</h2><p>Please consult the <a href="http://ricostacruz.com/authsense/">Authsense documentation</a> for full details.</p>
 <p>Create a module:</p>
 <pre><code class="elixir">defmodule Myapp.Auth do
-  use Authsense, %{
+  use Authsense,
     repo: Myapp.Auth,
     model: Myapp.User
-  }
 end</code></pre>
 <p>You can then call some helpers for authentication:</p>
 <pre><code class="elixir"># For login actions
