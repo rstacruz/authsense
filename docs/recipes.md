@@ -119,7 +119,7 @@ end
 
 ## Token-based authentication
 
-You can implement your own version of `Auth.set_current_user/2` to
+You can implement your own version of `Auth.assign_current_user/2` to
 authenticate based on something else other than passwords.
 
 ```elixir
