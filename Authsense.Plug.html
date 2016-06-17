@@ -70,22 +70,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Authsense can be used as a plug.</p>
-<pre><code class="elixir">defmodule Auth do
-  use Authsense, %{ ... }
-end
-
-# in your controller:
-plug Auth</code></pre>
-<p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
-to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
-<pre><code class="elixir">conn.assigns.current_user
-
-&lt;%= if @current_user %&gt;
-  Hello, &lt;%= @current_user.name %&gt;
-&lt;% else %&gt;
-  You are not logged in.
-&lt;% end %&gt;</code></pre>
+          <p>See <code class="inline">Authsense.call/2</code>.</p>
 
         </section>
       
@@ -142,7 +127,7 @@ to the User model if logged in, or to <code class="inline">nil</code> if logged 
     </a>
     <span class="signature">call(map, conn, atom)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/plug.ex#L32" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/plug.ex#L14" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

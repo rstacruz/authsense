@@ -90,7 +90,7 @@
     <a href="#authenticate/2">authenticate(opts, changeset)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Checks if someone can authenticate. Works on both Ecto changesets or tuples</p>
+    <div class="summary-synopsis"><p>See <code class="inline">Authsense.authenticate/2</code></p>
 </div>
   
 </div>
@@ -109,7 +109,7 @@ on success, or <code class="inline">false</code> on error</p>
     <a href="#generate_hashed_password/2">generate_hashed_password(opts, changeset)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Updates an <code class="inline">Ecto.Changeset</code> to generate a hashed password</p>
+    <div class="summary-synopsis"><p>See <code class="inline">Authsense.generate_hashed_password/1</code></p>
 </div>
   
 </div>
@@ -118,7 +118,7 @@ on success, or <code class="inline">false</code> on error</p>
     <a href="#load_user/2">load_user(opts, email)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Loads a user by a given identity field value. Returns a nil on failure</p>
+    <div class="summary-synopsis"><p>See <code class="inline">Authsense.load_user/1</code></p>
 </div>
   
 </div>
@@ -150,7 +150,7 @@ on success, or <code class="inline">false</code> on error</p>
     </a>
     <span class="signature">authenticate(opts, changeset)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L21" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L8" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -158,19 +158,7 @@ on success, or <code class="inline">false</code> on error</p>
   </div>
   
   <section class="docstring">
-    <p>Checks if someone can authenticate. Works on both Ecto changesets or tuples.</p>
-<pre><code class="elixir">def login_create(conn, %{&quot;user&quot; =&gt; user_params}) do
-  changeset = User.changeset(%User{}, user_params)
-  case Auth.authenticate(changeset) do
-    {:ok, user} -&gt;
-      conn
-      |&gt; Auth.set_current_user(user)
-      |&gt; put_flash(:info, &quot;Welcome.&quot;)
-      |&gt; redirect(to: &quot;/&quot;)
-    {:error, changeset} -&gt;
-      render(conn, &quot;login.html&quot;, changeset: changeset)
-  end
-end</code></pre>
+    <p>See <code class="inline">Authsense.authenticate/2</code>.</p>
 
   </section>
 </div>
@@ -181,7 +169,7 @@ end</code></pre>
     </a>
     <span class="signature">authenticate_user(opts, changeset)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L37" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L24" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -204,7 +192,7 @@ authenticate_user({ email, password })</code></pre>
     </a>
     <span class="signature">generate_hashed_password(opts, changeset)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L94" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L59" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -212,23 +200,7 @@ authenticate_user({ email, password })</code></pre>
   </div>
   
   <section class="docstring">
-    <p>Updates an <code class="inline">Ecto.Changeset</code> to generate a hashed password.</p>
-<p>If the changeset has <code class="inline">:password</code> in it, it will be hashed and stored as
-<code class="inline">:hashed_password</code>.  (Fields can be configured in <a href="Authsense.html"><code class="inline">Authsense</code></a>.)</p>
-<pre><code class="elixir">changeset
-|&gt; Auth.generate_hashed_password()</code></pre>
-<p>It’s typically used in a model’s <code class="inline">changeset/2</code> function.</p>
-<pre><code class="elixir">defmodule Example.User do
-  use Example.Web, :model
-
-  def changeset(model, params \ :empty) do
-    model
-    |&gt; cast(params, @required_fields, @optional_fields)
-    |&gt; Auth.generate_hashed_password()
-    |&gt; validate_confirmation(:password, message: &quot;password confirmation doesn&#39;t match&quot;)
-    |&gt; unique_constraint(:email)
-  end
-end</code></pre>
+    <p>See <code class="inline">Authsense.generate_hashed_password/1</code>.</p>
 
   </section>
 </div>
@@ -239,7 +211,7 @@ end</code></pre>
     </a>
     <span class="signature">load_user(opts, email)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L46" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -247,8 +219,7 @@ end</code></pre>
   </div>
   
   <section class="docstring">
-    <p>Loads a user by a given identity field value. Returns a nil on failure.</p>
-<pre><code class="elixir">load_user(&quot;rico@gmail.com&quot;)  #=&gt; %User{...}</code></pre>
+    <p>See <code class="inline">Authsense.load_user/1</code>.</p>
 
   </section>
 </div>
