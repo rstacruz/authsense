@@ -24,9 +24,11 @@ defmodule Authsense do
         conn |> Auth.set_current_user(nil)   # logout
 
   ## Get current user
-  `call/2` - to get authentication data, use `Auth` as a plug:
+  `assign_current_user/1` - to get authentication data, use `Auth` as a plug:
 
-      plug Auth
+      # controller
+      import Auth
+      plug :assign_current_user
 
   When using this plug, you can then get the current user:
 
@@ -185,10 +187,7 @@ defmodule Authsense do
         You are not logged in.
       <% end %>
   """
-  @callback call(Plug.Conn.t, any) :: Plug.Conn.t
-
-  @doc false
-  @callback init(any) :: nil
+  @callback assign_current_user(Plug.Conn.t, nil) :: Plug.Conn.t
 
   defmacro __using__(opts \\ []) do
     quote do
@@ -207,11 +206,8 @@ defmodule Authsense do
       def set_current_user(conn, user), do:
         Authsense.Actions.set_current_user(conn, user)
 
-      def init(options), do:
-        Authsense.Plug.init(@auth_options, options)
-
-      def call(conn, options), do:
-        Authsense.Plug.call(@auth_options, conn, options)
+      def assign_current_user(conn, options \\ nil), do:
+        Authsense.Plug.assign_current_user(@auth_options, conn, options)
     end
   end
 end

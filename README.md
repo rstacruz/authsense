@@ -60,7 +60,8 @@ changeset
 
 ```elixir
 # For controllers
-plug Auth
+import Auth
+plug :assign_current_user
 conn.assigns.current_user  #=> %User{} | nil
 ```
 

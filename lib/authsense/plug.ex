@@ -5,13 +5,10 @@ defmodule Authsense.Plug do
 
   import Plug.Conn, only: [get_session: 2, assign: 3]
 
-  @doc false
-  def init(%{}, _options), do: nil
-
   @doc """
   Adds `:current_user` to the assigns.
   """
-  def call(%{model: model, repo: repo}, conn, nil) do
+  def assign_current_user(%{model: model, repo: repo}, conn, _options \\ nil) do
     if Map.has_key?(conn.assigns, :current_user) do
       conn
     else
