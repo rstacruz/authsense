@@ -89,7 +89,8 @@ conn |&gt; Auth.set_current_user(nil)   # logout</code></pre>
 changeset
 |&gt; Auth.generate_hashed_password()</code></pre>
 <pre><code class="elixir"># For controllers
-plug Auth
+import Auth
+plug :assign_current_user
 conn.assigns.current_user  #=&gt; %User{} | nil</code></pre>
 <p>Please consult the <a href="http://ricostacruz.com/authsense/">Authsense documentation</a> for more.</p>
 <h2 id="thanks"> Thanks</h2><p><strong>authsense</strong> © 2016+, Rico Sta. Cruz. Released under the <a href="http://mit-license.org/" title="">MIT</a> License.<br>

@@ -89,8 +89,10 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 <pre><code class="elixir">  conn |&gt; Auth.set_current_user(user)  # login
   conn |&gt; Auth.set_current_user(nil)   # logout</code></pre>
 <h2>Get current user</h2>
-<p><code class="inline">call/2</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
-<pre><code class="elixir">plug Auth</code></pre>
+<p><code class="inline">assign_current_user/1</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
+<pre><code class="elixir"># controller
+import Auth
+plug :assign_current_user</code></pre>
 <p>When using this plug, you can then get the current user:</p>
 <pre><code class="elixir">conn.assigns.current_user  #=&gt; %User{} | nil</code></pre>
 <h2>Usage in models</h2>
@@ -143,19 +145,19 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:authenticate/1">authenticate(arg0)</a>
+    <a href="#c:assign_current_user/2">assign_current_user(arg0, atom)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Checks if someone can authenticate with a given username/password pair</p>
+    <div class="summary-synopsis"><p>Plug callback to check if a user has already logged in</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:call/2">call(arg0, any)</a>
+    <a href="#c:authenticate/1">authenticate(arg0)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Plug callback to check if a user has already logged in</p>
+    <div class="summary-synopsis"><p>Checks if someone can authenticate with a given username/password pair</p>
 </div>
   
 </div>
@@ -166,12 +168,6 @@ things: see <a href="recipes.html">Recipes</a>.</p>
   
     <div class="summary-synopsis"><p>Updates an <code class="inline">Ecto.Changeset</code> to generate a hashed password</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:init/1">init(any)</a>
-  </div>
   
 </div>
 <div class="summary-row">
@@ -213,14 +209,59 @@ things: see <a href="recipes.html">Recipes</a>.</p>
             </a>
             Callbacks
           </h1>
-          <div class="detail" id="c:authenticate/1">
+          <div class="detail" id="c:assign_current_user/2">
+  <div class="detail-header">
+    <a href="#c:assign_current_user/2" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assign_current_user(arg0, atom)</span>
+    
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L190" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">assign_current_user(Plug.Conn.t, nil) :: Plug.Conn.t</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Plug callback to check if a user has already logged in.</p>
+<p>Authsense can be used as a plug. Use <code class="inline">plug Auth</code> on controllers that you need
+to have access to a user.</p>
+<pre><code class="elixir">defmodule Auth do
+  use Authsense, # ...
+end
+
+# in your controller or pipeline:
+plug Auth</code></pre>
+<p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
+to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
+<pre><code class="elixir">conn.assigns.current_user
+
+&lt;%= if @current_user %&gt;
+  Hello, &lt;%= @current_user.name %&gt;
+&lt;% else %&gt;
+  You are not logged in.
+&lt;% end %&gt;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="c:authenticate/1">
   <div class="detail-header">
     <a href="#c:authenticate/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
     <span class="signature">authenticate(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L130" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L132" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -267,51 +308,6 @@ end</code></pre>
 
   </section>
 </div>
-<div class="detail" id="c:call/2">
-  <div class="detail-header">
-    <a href="#c:call/2" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">call(arg0, any)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L188" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">call(Plug.Conn.t, any) :: Plug.Conn.t</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Plug callback to check if a user has already logged in.</p>
-<p>Authsense can be used as a plug. Use <code class="inline">plug Auth</code> on controllers that you need
-to have access to a user.</p>
-<pre><code class="elixir">defmodule Auth do
-  use Authsense, # ...
-end
-
-# in your controller or pipeline:
-plug Auth</code></pre>
-<p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
-to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
-<pre><code class="elixir">conn.assigns.current_user
-
-&lt;%= if @current_user %&gt;
-  Hello, &lt;%= @current_user.name %&gt;
-&lt;% else %&gt;
-  You are not logged in.
-&lt;% end %&gt;</code></pre>
-
-  </section>
-</div>
 <div class="detail" id="c:generate_hashed_password/1">
   <div class="detail-header">
     <a href="#c:generate_hashed_password/1" class="detail-link" title="Link to this callback">
@@ -319,7 +315,7 @@ to the User model if logged in, or to <code class="inline">nil</code> if logged 
     </a>
     <span class="signature">generate_hashed_password(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L97" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L99" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -358,33 +354,6 @@ implementation.</p>
 
   </section>
 </div>
-<div class="detail" id="c:init/1">
-  <div class="detail-header">
-    <a href="#c:init/1" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(any)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L191" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">init(any) :: nil</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
 <div class="detail" id="c:load_user/1">
   <div class="detail-header">
     <a href="#c:load_user/1" class="detail-link" title="Link to this callback">
@@ -392,7 +361,7 @@ implementation.</p>
     </a>
     <span class="signature">load_user(arg0)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L140" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L142" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -421,7 +390,7 @@ implementation.</p>
     </a>
     <span class="signature">set_current_user(arg0, arg1)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L161" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L163" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
