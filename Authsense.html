@@ -85,9 +85,9 @@ end</code></pre>
 <pre><code class="elixir">Auth.authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
 Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
 <h2>Logging in/out</h2>
-<p><code class="inline">set_current_user/2</code> will set session variables for logging in or out.</p>
-<pre><code class="elixir">  conn |&gt; Auth.set_current_user(user)  # login
-  conn |&gt; Auth.set_current_user(nil)   # logout</code></pre>
+<p><code class="inline">put_current_user/2</code> will set session variables for logging in or out.</p>
+<pre><code class="elixir">  conn |&gt; Auth.put_current_user(user)  # login
+  conn |&gt; Auth.put_current_user(nil)   # logout</code></pre>
 <h2>Get current user</h2>
 <p><code class="inline">fetch_current_user/1</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
 <pre><code class="elixir"># controller
@@ -181,7 +181,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:set_current_user/2">set_current_user(arg0, arg1)</a>
+    <a href="#c:put_current_user/2">put_current_user(arg0, arg1)</a>
   </div>
   
     <div class="summary-synopsis"><p>Sets the current user for the session</p>
@@ -252,7 +252,7 @@ used as a tuple, it returns <code class="inline">{:error, nil}</code> on failure
   case Auth.authenticate(changeset) do
     {:ok, user} -&gt;
       conn
-      |&gt; Auth.set_current_user(user)
+      |&gt; Auth.put_current_user(user)
       |&gt; put_flash(:info, &quot;Welcome.&quot;)
       |&gt; redirect(to: &quot;/&quot;)
 
@@ -382,12 +382,12 @@ implementation.</p>
 
   </section>
 </div>
-<div class="detail" id="c:set_current_user/2">
+<div class="detail" id="c:put_current_user/2">
   <div class="detail-header">
-    <a href="#c:set_current_user/2" class="detail-link" title="Link to this callback">
+    <a href="#c:put_current_user/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_current_user(arg0, arg1)</span>
+    <span class="signature">put_current_user(arg0, arg1)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L163" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -400,7 +400,7 @@ implementation.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_current_user(Plug.Conn.t, Ecto.Schema.t | nil) :: Plug.Conn.t</code></pre>
+          <pre><code class="elixir">put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) :: Plug.Conn.t</code></pre>
         
       </div>
     </div>
@@ -408,12 +408,12 @@ implementation.</p>
   <section class="docstring">
     <p>Sets the current user for the session.</p>
 <pre><code class="elixir">conn
-|&gt; Auth.set_current_user(user)
+|&gt; Auth.put_current_user(user)
 |&gt; put_flash(:info, &quot;Welcome.&quot;)
 |&gt; redirect(to: &quot;/&quot;)</code></pre>
 <p>To logout, set it to nil.</p>
 <pre><code class="elixir">conn
-|&gt; Auth.set_current_user(nil)
+|&gt; Auth.put_current_user(nil)
 |&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
 |&gt; redirect(to: &quot;/&quot;)</code></pre>
 <p>This sets the <code class="inline">:current_user_id</code> in the Session store. To access the User

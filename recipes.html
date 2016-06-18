@@ -91,24 +91,24 @@ def login(conn, params) do
   changeset = User.changeset(%User{})
   render(conn, &quot;login.html&quot;, changeset: changeset)
 end</code></pre>
-<p><code class="inline">AuthController.login_create</code> logs someone in (creates a session) using <code class="inline">Auth.set_current_user/2</code>.</p>
+<p><code class="inline">AuthController.login_create</code> logs someone in (creates a session) using <code class="inline">Auth.put_current_user/2</code>.</p>
 <pre><code class="elixir">def login_create(conn, %{&quot;user&quot; =&gt; user_params}) do
   changeset = User.changeset(%User{}, user_params)
 
   case Auth.authenticate(changeset) do
     {:ok, user} -&gt;
       conn
-      |&gt; Auth.set_current_user(user)
+      |&gt; Auth.put_current_user(user)
       |&gt; put_flash(:info, &quot;Welcome.&quot;)
       |&gt; redirect(to: &quot;/&quot;)
     {:error, changeset} -&gt;
       render(conn, &quot;login.html&quot;, changeset: changeset)
   end
 end</code></pre>
-<p><code class="inline">AuthController.logout</code> logs you out using <code class="inline">Auth.set_current_user/2</code>.</p>
+<p><code class="inline">AuthController.logout</code> logs you out using <code class="inline">Auth.put_current_user/2</code>.</p>
 <pre><code class="elixir">def logout(conn, _params) do
   conn
-  |&gt; Auth.set_current_user(nil)
+  |&gt; Auth.put_current_user(nil)
   |&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
   |&gt; redirect(to: &quot;/&quot;)
 end</code></pre>

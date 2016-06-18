@@ -82,8 +82,8 @@ end</code></pre>
 Auth.authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
 Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
 <pre><code class="elixir"># For login/logout actions
-conn |&gt; Auth.set_current_user(user)  # login
-conn |&gt; Auth.set_current_user(nil)   # logout</code></pre>
+conn |&gt; Auth.put_current_user(user)  # login
+conn |&gt; Auth.put_current_user(nil)   # logout</code></pre>
 <pre><code class="elixir"># For model changesets
 changeset
 |&gt; Auth.generate_hashed_password()</code></pre>

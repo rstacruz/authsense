@@ -87,7 +87,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate/2">authenticate(opts, changeset)</a>
+    <a href="#authenticate/2">authenticate(credentials, opts)</a>
   </div>
   
     <div class="summary-synopsis"><p>See <code class="inline">Authsense.authenticate/2</code></p>
@@ -96,7 +96,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate_user/2">authenticate_user(opts, changeset)</a>
+    <a href="#authenticate_user/2">authenticate_user(changeset, opts)</a>
   </div>
   
     <div class="summary-synopsis"><p>Returns the user associated with these credentials. Returns the User record
@@ -106,7 +106,7 @@ on success, or <code class="inline">false</code> on error</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#generate_hashed_password/2">generate_hashed_password(opts, changeset)</a>
+    <a href="#generate_hashed_password/2">generate_hashed_password(changeset, map)</a>
   </div>
   
     <div class="summary-synopsis"><p>See <code class="inline">Authsense.generate_hashed_password/1</code></p>
@@ -115,7 +115,7 @@ on success, or <code class="inline">false</code> on error</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#load_user/2">load_user(opts, email)</a>
+    <a href="#load_user/2">load_user(email, map)</a>
   </div>
   
     <div class="summary-synopsis"><p>See <code class="inline">Authsense.load_user/1</code></p>
@@ -148,7 +148,7 @@ on success, or <code class="inline">false</code> on error</p>
     <a href="#authenticate/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate(opts, changeset)</span>
+    <span class="signature">authenticate(credentials, opts)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L8" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -167,7 +167,7 @@ on success, or <code class="inline">false</code> on error</p>
     <a href="#authenticate_user/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate_user(opts, changeset)</span>
+    <span class="signature">authenticate_user(changeset, opts)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L24" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -190,7 +190,7 @@ authenticate_user({ email, password })</code></pre>
     <a href="#generate_hashed_password/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">generate_hashed_password(opts, changeset)</span>
+    <span class="signature">generate_hashed_password(changeset, map)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L55" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -209,9 +209,9 @@ authenticate_user({ email, password })</code></pre>
     <a href="#load_user/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">load_user(opts, email)</span>
+    <span class="signature">load_user(email, map)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L46" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L48" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
