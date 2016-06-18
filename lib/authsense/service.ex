@@ -34,7 +34,7 @@ defmodule Authsense.Service do
     {email, password},
     %{crypto: crypto, hashed_password_field: hashed_passwd} = opts)
   do
-    user = load_user(email, opts)
+    user = get_user(email, opts)
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -43,9 +43,9 @@ defmodule Authsense.Service do
   end
 
   @doc """
-  See `Authsense.load_user/1`.
+  See `Authsense.get_user/1`.
   """
-  def load_user(email, %{repo: repo, model: model, identity_field: id}) do
+  def get_user(email, %{repo: repo, model: model, identity_field: id}) do
     repo.get_by(model, [{id, email}])
   end
 

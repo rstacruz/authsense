@@ -62,13 +62,13 @@ defmodule AuthsenseTest do
     assert {:error, nil} == Auth.authenticate({"rico@gmail.com", "nope"})
   end
 
-  test "load_user" do
+  test "get_user" do
     add_user
-    assert Auth.load_user("rico@gmail.com") == get_user
+    assert Auth.get_user("rico@gmail.com") == get_user
   end
 
-  test "load_user failure" do
-    assert Auth.load_user("nobody@gmail.com") == nil
+  test "get_user failure" do
+    assert Auth.get_user("nobody@gmail.com") == nil
   end
 
   @tag :pending

@@ -137,9 +137,9 @@ defmodule Authsense do
   @doc """
   Loads a user by a given identity field value. Returns a nil on failure.
 
-      load_user("rico@gmail.com")  #=> %User{...}
+      get_user("rico@gmail.com")  #=> %User{...}
   """
-  @callback load_user(String.t) ::
+  @callback get_user(String.t) ::
     Ecto.Schema.t | nil
 
   @doc """
@@ -198,8 +198,8 @@ defmodule Authsense do
       def authenticate(credentials), do:
         Authsense.Service.authenticate(credentials, @auth_options)
 
-      def load_user(email), do:
-        Authsense.Service.load_user(email, @auth_options)
+      def get_user(email), do:
+        Authsense.Service.get_user(email, @auth_options)
 
       def put_current_user(conn, user), do:
         Authsense.Plug.put_current_user(conn, user)
