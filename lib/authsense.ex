@@ -193,19 +193,19 @@ defmodule Authsense do
       @auth_options Map.merge(Authsense.defaults, Enum.into(unquote(opts), %{}))
 
       def generate_hashed_password(changeset), do:
-        Authsense.Service.generate_hashed_password(@auth_options, changeset)
+        Authsense.Service.generate_hashed_password(changeset, @auth_options)
 
       def authenticate(credentials), do:
-        Authsense.Service.authenticate(@auth_options, credentials)
+        Authsense.Service.authenticate(credentials, @auth_options)
 
       def load_user(email), do:
-        Authsense.Service.load_user(@auth_options, email)
+        Authsense.Service.load_user(email, @auth_options)
 
       def put_current_user(conn, user), do:
         Authsense.Plug.put_current_user(conn, user)
 
-      def fetch_current_user(conn, options \\ nil), do:
-        Authsense.Plug.fetch_current_user(@auth_options, conn, options)
+      def fetch_current_user(conn, nil), do:
+        Authsense.Plug.fetch_current_user(conn, @auth_options)
     end
   end
 end
