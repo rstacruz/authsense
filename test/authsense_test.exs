@@ -72,7 +72,8 @@ defmodule AuthsenseTest do
   end
 
   @tag :pending
-  test "set_current_user"
+  test "put_current_user"
+  test "fetch_current_user"
 
   @tag :pending
   test "plug"

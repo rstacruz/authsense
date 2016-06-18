@@ -53,7 +53,7 @@ def login(conn, params) do
 end
 ```
 
-`AuthController.login_create` logs someone in (creates a session) using `Auth.set_current_user/2`.
+`AuthController.login_create` logs someone in (creates a session) using `Auth.put_current_user/2`.
 
 ```elixir
 def login_create(conn, %{"user" => user_params}) do
@@ -62,7 +62,7 @@ def login_create(conn, %{"user" => user_params}) do
   case Auth.authenticate(changeset) do
     {:ok, user} ->
       conn
-      |> Auth.set_current_user(user)
+      |> Auth.put_current_user(user)
       |> put_flash(:info, "Welcome.")
       |> redirect(to: "/")
     {:error, changeset} ->
@@ -71,12 +71,12 @@ def login_create(conn, %{"user" => user_params}) do
 end
 ```
 
-`AuthController.logout` logs you out using `Auth.set_current_user/2`.
+`AuthController.logout` logs you out using `Auth.put_current_user/2`.
 
 ```elixir
 def logout(conn, _params) do
   conn
-  |> Auth.set_current_user(nil)
+  |> Auth.put_current_user(nil)
   |> put_flash(:info, "You've been logged out.")
   |> redirect(to: "/")
 end

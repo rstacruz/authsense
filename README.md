@@ -47,8 +47,8 @@ Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
 
 ```elixir
 # For login/logout actions
-conn |> Auth.set_current_user(user)  # login
-conn |> Auth.set_current_user(nil)   # logout
+conn |> Auth.put_current_user(user)  # login
+conn |> Auth.put_current_user(nil)   # logout
 ```
 
 ```elixir

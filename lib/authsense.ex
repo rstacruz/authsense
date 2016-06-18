@@ -18,10 +18,10 @@ defmodule Authsense do
       Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
 
   ## Logging in/out
-  `set_current_user/2` will set session variables for logging in or out.
+  `put_current_user/2` will set session variables for logging in or out.
 
-        conn |> Auth.set_current_user(user)  # login
-        conn |> Auth.set_current_user(nil)   # logout
+        conn |> Auth.put_current_user(user)  # login
+        conn |> Auth.put_current_user(nil)   # logout
 
   ## Get current user
   `fetch_current_user/1` - to get authentication data, use `Auth` as a plug:
@@ -120,7 +120,7 @@ defmodule Authsense do
         case Auth.authenticate(changeset) do
           {:ok, user} ->
             conn
-            |> Auth.set_current_user(user)
+            |> Auth.put_current_user(user)
             |> put_flash(:info, "Welcome.")
             |> redirect(to: "/")
 
@@ -146,21 +146,21 @@ defmodule Authsense do
   Sets the current user for the session.
 
       conn
-      |> Auth.set_current_user(user)
+      |> Auth.put_current_user(user)
       |> put_flash(:info, "Welcome.")
       |> redirect(to: "/")
 
   To logout, set it to nil.
 
       conn
-      |> Auth.set_current_user(nil)
+      |> Auth.put_current_user(nil)
       |> put_flash(:info, "You've been logged out.")
       |> redirect(to: "/")
 
   This sets the `:current_user_id` in the Session store. To access the User
   model, use `Auth` as a plug (see `Authsense.Plug`).
   """
-  @callback set_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
+  @callback put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
     Plug.Conn.t
 
   @doc """
@@ -201,8 +201,8 @@ defmodule Authsense do
       def load_user(email), do:
         Authsense.Service.load_user(@auth_options, email)
 
-      def set_current_user(conn, user), do:
-        Authsense.Actions.set_current_user(conn, user)
+      def put_current_user(conn, user), do:
+        Authsense.Plug.put_current_user(conn, user)
 
       def fetch_current_user(conn, options \\ nil), do:
         Authsense.Plug.fetch_current_user(@auth_options, conn, options)
