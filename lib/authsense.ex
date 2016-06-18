@@ -24,11 +24,11 @@ defmodule Authsense do
         conn |> Auth.set_current_user(nil)   # logout
 
   ## Get current user
-  `assign_current_user/1` - to get authentication data, use `Auth` as a plug:
+  `fetch_current_user/1` - to get authentication data, use `Auth` as a plug:
 
       # controller
       import Auth
-      plug :assign_current_user
+      plug :fetch_current_user
 
   When using this plug, you can then get the current user:
 
@@ -172,7 +172,7 @@ defmodule Authsense do
 
       # in your controller or pipeline:
       import Auth
-      plug :assign_current_user
+      plug :fetch_current_user
 
   By doing so, you'll get access to the `:current_user` assigns. It will be set
   to the User model if logged in, or to `nil` if logged out.
@@ -185,7 +185,7 @@ defmodule Authsense do
         You are not logged in.
       <% end %>
   """
-  @callback assign_current_user(Plug.Conn.t, nil) :: Plug.Conn.t
+  @callback fetch_current_user(Plug.Conn.t, nil) :: Plug.Conn.t
 
   defmacro __using__(opts \\ []) do
     quote do
@@ -204,8 +204,8 @@ defmodule Authsense do
       def set_current_user(conn, user), do:
         Authsense.Actions.set_current_user(conn, user)
 
-      def assign_current_user(conn, options \\ nil), do:
-        Authsense.Plug.assign_current_user(@auth_options, conn, options)
+      def fetch_current_user(conn, options \\ nil), do:
+        Authsense.Plug.fetch_current_user(@auth_options, conn, options)
     end
   end
 end

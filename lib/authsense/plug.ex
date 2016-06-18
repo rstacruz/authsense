@@ -8,11 +8,11 @@ defmodule Authsense.Plug do
   @doc """
   Adds `:current_user` to the assigns.
   """
-  def assign_current_user(_, %Plug.Conn{assigns: %{ current_user: _ }} = conn, _) do
+  def fetch_current_user(_, %Plug.Conn{assigns: %{ current_user: _ }} = conn, _) do
     conn
   end
 
-  def assign_current_user(%{model: model, repo: repo}, conn, _options) do
+  def fetch_current_user(%{model: model, repo: repo}, conn, _options) do
     case get_session(conn, :current_user_id) do
       nil ->
         assign(conn, :current_user, nil)

@@ -112,14 +112,14 @@ Use it as a plug after using `Auth`.
 defmodule Myapp.MyController do
   import Auth
 
-  plug :assign_current_user
+  plug :fetch_current_user
   plug :ensure_authenticated
 end
 ```
 
 ## Token-based authentication
 
-You can implement your own version of `Auth.assign_current_user/2` to
+You can implement your own version of `Auth.fetch_current_user/2` to
 authenticate based on something else other than passwords.
 
 ```elixir
