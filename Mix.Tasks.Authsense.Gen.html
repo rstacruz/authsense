@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>Authsense.Service – authsense v0.0.1</title>
+    <title>Mix.Tasks.Authsense.Gen – authsense v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,15 +59,20 @@
 
       <h1>
         <small class="visible-xs">authsense v0.0.1</small>
-        Authsense.Service
+        Mix.Tasks.Authsense.Gen
         
         
-          <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/mix/tasks/authsense.gen.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
+      
+        <section id="moduledoc" class="docstring">
+          <p>I like turtles</p>
+
+        </section>
       
 
       
@@ -87,38 +92,25 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate/2">authenticate(credentials, opts)</a>
+    <a href="#add_migration/1">add_migration(args)</a>
   </div>
   
-    <div class="summary-synopsis"><p>See <code class="inline">Authsense.authenticate/2</code></p>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parse_args/1">parse_args(args)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Parses arguments</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate_user/2">authenticate_user(changeset, opts)</a>
+    <a href="#run/1">run(args)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the user associated with these credentials. Returns the User record
-on success, or <code class="inline">false</code> on error</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#generate_hashed_password/2">generate_hashed_password(changeset, map)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>See <code class="inline">Authsense.generate_hashed_password/1</code></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_user/2">get_user(email, map)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>See <code class="inline">Authsense.get_user/1</code></p>
+    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Mix.Task.run/1</code></p>
 </div>
   
 </div>
@@ -143,14 +135,14 @@ on success, or <code class="inline">false</code> on error</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="authenticate/2">
+          <div class="detail" id="add_migration/1">
   <div class="detail-header">
-    <a href="#authenticate/2" class="detail-link" title="Link to this function">
+    <a href="#add_migration/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate(credentials, opts)</span>
+    <span class="signature">add_migration(args)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/mix/tasks/authsense.gen.ex#L27" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -158,18 +150,36 @@ on success, or <code class="inline">false</code> on error</p>
   </div>
   
   <section class="docstring">
-    <p>See <code class="inline">Authsense.authenticate/2</code>.</p>
+    
+  </section>
+</div>
+<div class="detail" id="parse_args/1">
+  <div class="detail-header">
+    <a href="#parse_args/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse_args(args)</span>
+    
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/mix/tasks/authsense.gen.ex#L39" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Parses arguments</p>
 
   </section>
 </div>
-<div class="detail" id="authenticate_user/2">
+<div class="detail" id="run/1">
   <div class="detail-header">
-    <a href="#authenticate_user/2" class="detail-link" title="Link to this function">
+    <a href="#run/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate_user(changeset, opts)</span>
+    <span class="signature">run(args)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L24" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/mix/tasks/authsense.gen.ex#L18" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -177,49 +187,7 @@ on success, or <code class="inline">false</code> on error</p>
   </div>
   
   <section class="docstring">
-    <p>Returns the user associated with these credentials. Returns the User record
-on success, or <code class="inline">false</code> on error.</p>
-<p>Accepts both <code class="inline">{ email, password }</code> tuples and <code class="inline">Ecto.Changeset</code>s.</p>
-<pre><code class="elixir">authenticate_user(changeset)
-authenticate_user({ email, password })</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="generate_hashed_password/2">
-  <div class="detail-header">
-    <a href="#generate_hashed_password/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">generate_hashed_password(changeset, map)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L55" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>See <code class="inline">Authsense.generate_hashed_password/1</code>.</p>
-
-  </section>
-</div>
-<div class="detail" id="get_user/2">
-  <div class="detail-header">
-    <a href="#get_user/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_user(email, map)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense/service.ex#L48" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>See <code class="inline">Authsense.get_user/1</code>.</p>
+    <p>Callback implementation for <code class="inline">c:Mix.Task.run/1</code>.</p>
 
   </section>
 </div>

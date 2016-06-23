@@ -89,7 +89,7 @@ Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} 
 <pre><code class="elixir">  conn |&gt; Auth.put_current_user(user)  # login
   conn |&gt; Auth.put_current_user(nil)   # logout</code></pre>
 <h2>Get current user</h2>
-<p><code class="inline">fetch_current_user/1</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
+<p><code class="inline">fetch_current_user/2</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
 <pre><code class="elixir"># controller
 import Auth
 plug :fetch_current_user</code></pre>
@@ -154,7 +154,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:fetch_current_user/2">fetch_current_user(arg0, atom)</a>
+    <a href="#c:fetch_current_user/2">fetch_current_user(arg0, list)</a>
   </div>
   
     <div class="summary-synopsis"><p>Sets the <code class="inline">:current_user</code> assigns variable based on session</p>
@@ -172,7 +172,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:load_user/1">load_user(arg0)</a>
+    <a href="#c:get_user/1">get_user(arg0)</a>
   </div>
   
     <div class="summary-synopsis"><p>Loads a user by a given identity field value. Returns a nil on failure</p>
@@ -268,7 +268,7 @@ end</code></pre>
     <a href="#c:fetch_current_user/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">fetch_current_user(arg0, atom)</span>
+    <span class="signature">fetch_current_user(arg0, list)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L188" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -281,7 +281,7 @@ end</code></pre>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">fetch_current_user(Plug.Conn.t, nil) :: Plug.Conn.t</code></pre>
+          <pre><code class="elixir">fetch_current_user(Plug.Conn.t, []) :: Plug.Conn.t</code></pre>
         
       </div>
     </div>
@@ -353,12 +353,12 @@ implementation.</p>
 
   </section>
 </div>
-<div class="detail" id="c:load_user/1">
+<div class="detail" id="c:get_user/1">
   <div class="detail-header">
-    <a href="#c:load_user/1" class="detail-link" title="Link to this callback">
+    <a href="#c:get_user/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">load_user(arg0)</span>
+    <span class="signature">get_user(arg0)</span>
     
       <a href="https://github.com/rstacruz/authsense/blob/v0.0.1/lib/authsense.ex#L142" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -371,14 +371,14 @@ implementation.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">load_user(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: Ecto.Schema.t | nil</code></pre>
+          <pre><code class="elixir">get_user(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: Ecto.Schema.t | nil</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
     <p>Loads a user by a given identity field value. Returns a nil on failure.</p>
-<pre><code class="elixir">load_user(&quot;rico@gmail.com&quot;)  #=&gt; %User{...}</code></pre>
+<pre><code class="elixir">get_user(&quot;rico@gmail.com&quot;)  #=&gt; %User{...}</code></pre>
 
   </section>
 </div>
