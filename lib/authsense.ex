@@ -24,7 +24,7 @@ defmodule Authsense do
         conn |> Auth.put_current_user(nil)   # logout
 
   ## Get current user
-  `fetch_current_user/1` - to get authentication data, use `Auth` as a plug:
+  `fetch_current_user/2` - to get authentication data, use `Auth` as a plug:
 
       # controller
       import Auth
@@ -185,7 +185,7 @@ defmodule Authsense do
         You are not logged in.
       <% end %>
   """
-  @callback fetch_current_user(Plug.Conn.t, nil) :: Plug.Conn.t
+  @callback fetch_current_user(Plug.Conn.t, []) :: Plug.Conn.t
 
   defmacro __using__(opts \\ []) do
     quote do
@@ -204,7 +204,7 @@ defmodule Authsense do
       def put_current_user(conn, user), do:
         Authsense.Plug.put_current_user(conn, user)
 
-      def fetch_current_user(conn, nil), do:
+      def fetch_current_user(conn, _opts \\ []), do:
         Authsense.Plug.fetch_current_user(conn, @auth_options)
     end
   end
