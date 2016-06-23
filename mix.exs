@@ -1,7 +1,7 @@
 defmodule Authsense.Mixfile do
   use Mix.Project
 
-  @version "0.0.1"
+  @version "0.1.0"
   @description """
   Sensible helpers for authentication for Phoenix/Ecto.
   """
@@ -56,7 +56,7 @@ defmodule Authsense.Mixfile do
       maintainers: ["Rico Sta. Cruz"],
       licenses: ["MIT"],
       files: ["lib", "mix.exs", "README.md"],
-      links: %{github: "https://github.com/rstacruz/expug"}
+      links: %{github: "https://github.com/rstacruz/authsense"}
     ]
   end
 
