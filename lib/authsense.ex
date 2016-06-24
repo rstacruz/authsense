@@ -3,7 +3,7 @@ defmodule Authsense do
   Sensible authentication helpers for Phoenix/Ecto.
 
   ### Basic use
-  Create your own module and use Authsense.
+  Specify your configuration via Mix.Config in `config/config.exs`.
 
       config :authsense, Myapp.Model,
         repo: Myapp.Repo
@@ -38,6 +38,19 @@ defmodule Authsense do
       |> generate_hashed_password()
 
   ## Configuration
+  Specify your configuration via Mix.Config in `config/config.exs`.
+
+      config :authsense, Myapp.User,
+        repo: Myapp.Repo
+
+  If you have more than one user, you can specify multiple configurations. (See `config/1` on info on how this is dealt with)
+
+      config :authsense, Myapp.User,
+        repo: Myapp.Repo
+
+      config :authsense, Myapp.AdminUser,
+        repo: Myapp.Repo
+
   These keys are available:
 
   - `repo` (required) - the Ecto repo to connect to.
@@ -46,7 +59,9 @@ defmodule Authsense do
   - `identity_field` - field that identifies the user. (default: `:email`)
   - `password_field` - virtual field that has the plaintext password. (default: `:password`)
   - `hashed_password_field` - field where the password is stored. (default: `:hashed_password`)
-  - `login_error` - the error to add to the changeset on `Auth.authenticate/1`. (default: "Invalid credentials.")
+  - `login_error` - the error to add to the changeset on `Authsense.Service.authenticate/2`. (default: *"Invalid credentials."*)
+
+  `config/1` has more info on how config is used.
 
   ## Recipes
 
@@ -66,7 +81,7 @@ defmodule Authsense do
   }
 
   @doc """
-  Retrieves default configuration.
+  _Internal:_ Retrieves default configuration.
 
   See `config/1` for more info.
   """
@@ -75,7 +90,32 @@ defmodule Authsense do
   end
 
   @doc """
-  Retrieves configuration for a given model.
+  _Internal:_ Retrieves configuration for a given model.
+
+  ## Practical use
+
+  This is used internally by other functions to retrieve your configuration. For example,
+  you typically call `Authsense.Service.authenticate/2` with one parameter:
+
+      authenticate({"rico@gmail.com", "password"})
+
+  But you may pass options to it to override:
+
+      authenticate({"rico@gmail.com", "password"},
+        hashed_password_field: :hashed_password)
+
+  Or if you provide multiple models to Authsense, you can pick which one to use:
+
+      config :authsense,
+        Myapp.User, repo: MyApp.Repo
+
+      config :authsense,
+        Myapp.AdminUser, repo: MyApp.Repo
+
+      authenticate({"rico@gmail.com", "password"}, Myapp.User)
+      authenticate({"rico@gmail.com", "password"}, Myapp.AdminUser)
+
+  ## Internal use
 
       > Authsense.config
       %{ model: Example.User, repo: Example.Repo, ... }
@@ -89,6 +129,7 @@ defmodule Authsense do
 
       > Authsense.config(model: Example.User, foo: :bar)
       %{ model: Example.User, ... foo: :bar }
+
   """
   def config(nil) do
     [ conf | _ ] = all_env

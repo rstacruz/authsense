@@ -10,8 +10,7 @@ Add authsense to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  #[{:authsense, "~> 0.0.1"}]
-  [{:authsense, git: "https://github.com/rstacruz/authsense.git"}]
+  [{:authsense, "~> 0.2.0"}]
 end
 ```
 
@@ -30,20 +29,20 @@ You can then call some helpers for authentication:
 
 ```elixir
 # For login actions
-Authsense.Service.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
-Authsense.Service.authenticate({ "userid", "password" })  #=> %User{} | nil
+authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
+authenticate({ "userid", "password" })  #=> %User{} | nil
 ```
 
 ```elixir
 # For login/logout actions
-conn |> Authsense.Plug.put_current_user(user)  # login
-conn |> Authsense.Plug.put_current_user(nil)   # logout
+conn |> put_current_user(user)  # login
+conn |> put_current_user(nil)   # logout
 ```
 
 ```elixir
 # For model changesets
 changeset
-|> Authsense.Service.generate_hashed_password()
+|> generate_hashed_password()
 ```
 
 ```elixir
@@ -53,7 +52,7 @@ plug :fetch_current_user
 conn.assigns.current_user  #=> %User{} | nil
 ```
 
-Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for more.
+Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) detailed info.
 
 ## Thanks
 

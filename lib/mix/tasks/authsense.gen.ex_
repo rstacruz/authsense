@@ -3,9 +3,7 @@ defmodule Mix.Tasks.Authsense.Gen do
 
   @shortdoc "Eats chocolate"
 
-  @moduledoc """
-  I like turtles
-  """
+  @moduledoc false
 
   @defaults %{
     model: "User",
