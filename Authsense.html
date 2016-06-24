@@ -77,8 +77,12 @@
   repo: Myapp.Repo</code></pre>
 <h2>Authentication</h2>
 <p><a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a> will validate a login.</p>
-<pre><code class="elixir">authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
-authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
+<pre><code class="elixir">authenticate(changeset)
+#=&gt; {:ok, user} or
+#   {:error, changeset_with_errors}
+
+authenticate({ &quot;userid&quot;, &quot;password&quot; })
+#=&gt; {:ok, user} or {:error, nil}</code></pre>
 <h2>Logging in/out</h2>
 <p><a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a> will set session variables for logging in or out.</p>
 <pre><code class="elixir">  conn |&gt; put_current_user(user)  # login
@@ -190,7 +194,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     </a>
     <span class="signature">config()</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.2.0/lib/authsense.ex#L88" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.2.0/lib/authsense.ex#L92" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -210,7 +214,7 @@ things: see <a href="recipes.html">Recipes</a>.</p>
     </a>
     <span class="signature">config(opts)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.2.0/lib/authsense.ex#L134" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.2.0/lib/authsense.ex#L138" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
