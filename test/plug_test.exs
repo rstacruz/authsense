@@ -57,4 +57,15 @@ defmodule PlugTest do
     assert get_session(conn, :current_user_id) == user.id
     assert conn.assigns.current_user == user
   end
+
+  test "fetch_current_user (nonexistent)" do
+    user = add_user
+    conn = conn(:get, "/")
+    |> sign_conn()
+    |> put_session(:current_user_id, 31337) # presumably non-existent
+    |> Authsense.Plug.fetch_current_user()
+
+    assert get_session(conn, :current_user_id) == 31337
+    assert conn.assigns.current_user == nil
+  end
 end
