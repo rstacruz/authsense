@@ -37,7 +37,7 @@ defmodule Authsense.Service do
   """
   def authenticate(credentials, model \\ nil) do
     case authenticate_user(credentials, model) do
-      false -> {:error, auth_failure(credentials)}
+      false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
   end
@@ -87,7 +87,7 @@ defmodule Authsense.Service do
 
   @doc """
   Updates an `Ecto.Changeset` to generate a hashed password.
-  
+
   If the changeset has `:password` in it, it will be hashed and stored as
   `:hashed_password`.  (Fields can be configured in `Authsense`.)
 

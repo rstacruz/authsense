@@ -65,27 +65,63 @@ defmodule Authsense do
     model: nil
   }
 
-  @callback put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
-    Plug.Conn.t
+  @doc """
+  Retrieves default configuration.
 
+  See `config/1` for more info.
+  """
   def config do
     config(nil)
   end
 
-  def config(nil) do # no model
-    [ _, conf | _ ] = Application.get_all_env(:authsense)
+  @doc """
+  Retrieves configuration for a given model.
+
+      > Authsense.config
+      %{ model: Example.User, repo: Example.Repo, ... }
+
+  If there are multiple configurations, you can pass a `model`.
+
+      > Authsense.config(Example.User)
+      %{ model: Example.User, repo: Example.Repo, ... }
+
+  You may also pass a list. Any values other than `model` will be added in.
+
+      > Authsense.config(model: Example.User, foo: :bar)
+      %{ model: Example.User, ... foo: :bar }
+  """
+  def config(nil) do
+    [ conf | _ ] = all_env
     { model, conf } = conf
     conf
     |> Enum.into(%{ model: model })
     |> Enum.into(@defaults)
   end
 
+  def config(opts) when is_list(opts) do
+    model = opts[:model]
+
+    conf =
+    (Keyword.get(all_env, model) || [])
+      |> Enum.into(%{ model: model })
+      |> Enum.into(@defaults)
+
+    Enum.into(opts, conf)
+  end
+
   def config(model) do
-    [ _ | conf ] = Application.get_all_env(:authsense)
-    conf = Keyword.get(conf, model)
-    { model, conf } = conf
-    conf
+    (Keyword.get(all_env, model) || [])
     |> Enum.into(%{ model: model })
     |> Enum.into(@defaults)
+  end
+
+  # Returns configuration concerning :authsense; strips away any configuration
+  # that doesn't fit.
+  defp all_env do
+    Application.get_all_env(:authsense)
+    |> Enum.filter(fn
+       {_model, [_] = list} -> Keyword.has_key?(list, :repo)
+       _ -> false
+    end)
   end
 end
