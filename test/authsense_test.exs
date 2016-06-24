@@ -13,7 +13,7 @@ defmodule AuthsenseTest do
   def add_user do
     %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Auth.generate_hashed_password()
+    |> Authsense.Service.generate_hashed_password()
     |> Repo.insert!
   end
 
@@ -31,7 +31,7 @@ defmodule AuthsenseTest do
   test "generate_hashed_password failure" do
     %User{}
     |> change(%{email: "rico@gmail.com"})
-    |> Auth.generate_hashed_password()
+    |> Authsense.Service.generate_hashed_password()
     |> Repo.insert!
 
     user = Repo.get_by(User, email: "rico@gmail.com")

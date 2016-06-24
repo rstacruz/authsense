@@ -71,36 +71,8 @@ defmodule Authsense do
   end
 
   @doc """
-  Updates an `Ecto.Changeset` to generate a hashed password.
-  
-  If the changeset has `:password` in it, it will be hashed and stored as
-  `:hashed_password`.  (Fields can be configured in `Authsense`.)
-
-      changeset
-      |> Auth.generate_hashed_password()
-
-  It's typically used in a model's `changeset/2` function.
-
-      defmodule Example.User do
-        use Example.Web, :model
-
-        def changeset(model, params \\ :empty) do
-          model
-          |> cast(params, @required_fields, @optional_fields)
-          |> Auth.generate_hashed_password()
-          |> validate_confirmation(:password, message: "password confirmation doesn't match")
-          |> unique_constraint(:email)
-        end
-      end
-
-  Also see `Authsense.Service.generate_hashed_password/2` for the underlying
-  implementation.
-  """
-  @callback generate_hashed_password(Ecto.Changeset.t) :: Ecto.Changeset.t
-
-  @doc """
   Checks if someone can authenticate with a given username/password pair.
-  
+
   Works on both Ecto changesets or tuples.
 
       %User{}
@@ -163,6 +135,24 @@ defmodule Authsense do
   @callback put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
     Plug.Conn.t
 
+  def config do # no model
+    [ _, conf | _ ] = Application.get_all_env(:authsense)
+    { model, conf } = conf
+    conf
+    |> Enum.into(%{ model: model })
+    |> Enum.into(defaults)
+  end
+
+  def config(model) do
+    [ _ | conf ] = Application.get_all_env(:authsense)
+    conf = Keyword.get(conf, model)
+    { model, conf } = conf
+    conf
+    |> Enum.into(%{ model: model })
+    |> Enum.into(defaults)
+  end
+
+
   @doc """
   Sets the `:current_user` assigns variable based on session.
 
@@ -191,9 +181,6 @@ defmodule Authsense do
     quote do
       @behaviour Authsense
       @auth_options Map.merge(Authsense.defaults, Enum.into(unquote(opts), %{}))
-
-      def generate_hashed_password(changeset), do:
-        Authsense.Service.generate_hashed_password(changeset, @auth_options)
 
       def authenticate(credentials), do:
         Authsense.Service.authenticate(credentials, @auth_options)
