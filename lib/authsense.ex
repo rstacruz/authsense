@@ -11,8 +11,12 @@ defmodule Authsense do
   ## Authentication
   `Authsense.Service.authenticate/2` will validate a login.
 
-      authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
-      authenticate({ "userid", "password" })  #=> %User{} | nil
+      authenticate(changeset)
+      #=> {:ok, user} or
+      #   {:error, changeset_with_errors}
+
+      authenticate({ "userid", "password" })
+      #=> {:ok, user} or {:error, nil}
 
   ## Logging in/out
   `Authsense.Plug.put_current_user/2` will set session variables for logging in or out.
