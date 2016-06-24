@@ -11,12 +11,14 @@ defmodule Authsense.Service do
   @doc """
   Checks if someone can authenticate with a given username/password pair.
 
-  Works on both Ecto changesets or tuples.
+  Credentials can be given as either an Ecto changeset or a tuple.
 
+      # Changeset:
       %User{}
       |> change(%{ email: "rico@gmail.com", password: "password" })
       |> authenticate()
 
+      # Tuple:
       authenticate({ "rico@gmail.com", "password" })
 
   Returns `{:ok, user}` on success, or `{:error, changeset}` on failure. If
@@ -39,7 +41,8 @@ defmodule Authsense.Service do
         end
       end
   """
-  def authenticate(credentials, model \\ nil) do
+  def authenticate(changeset_or_tuple, model \\ nil)
+  def authenticate(credentials, model) do
     case authenticate_user(credentials, model) do
       false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
@@ -127,7 +130,6 @@ defmodule Authsense.Service do
 
   # Adds errors to a changeset.
   # Used by `authenticate/2`.
-  defp auth_failure(changeset_or_tuple, model \\ nil)
   defp auth_failure(%Changeset{} = changeset, model) do
     %{password_field: passwd, login_error: login_error} =
       Authsense.config(model)

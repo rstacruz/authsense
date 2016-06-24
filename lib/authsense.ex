@@ -99,7 +99,7 @@ defmodule Authsense do
 
       authenticate({"rico@gmail.com", "password"})
 
-  But you may pass options to it to override:
+  But you may pass options to it to override the config:
 
       authenticate({"rico@gmail.com", "password"},
         hashed_password_field: :hashed_password)
