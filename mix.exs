@@ -64,10 +64,9 @@ defmodule Authsense.Mixfile do
     [
       source_ref: "v#{@version}",
       main: "Authsense",
-      extras: [
-        Path.wildcard("*.md") |
+      extras:
+        Path.wildcard("*.md") ++
         Path.wildcard("docs/**/*.md")
-      ]
     ]
   end
 end
