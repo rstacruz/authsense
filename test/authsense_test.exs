@@ -43,7 +43,7 @@ defmodule AuthsenseTest do
 
     assert {:ok, get_user} == %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Auth.authenticate()
+    |> Authsense.Service.authenticate()
   end
 
   test "authenticate via changeset failure" do
@@ -51,7 +51,7 @@ defmodule AuthsenseTest do
 
     {:error, changeset} = %User{}
     |> change(%{email: "rico@gmail.com", password: "nope"})
-    |> Auth.authenticate()
+    |> Authsense.Service.authenticate()
 
     assert changeset.errors == [password: "Invalid credentials."]
   end
@@ -59,16 +59,16 @@ defmodule AuthsenseTest do
   test "authenticate via password" do
     add_user
 
-    assert {:error, nil} == Auth.authenticate({"rico@gmail.com", "nope"})
+    assert {:error, nil} == Authsense.Service.authenticate({"rico@gmail.com", "nope"})
   end
 
   test "get_user" do
     add_user
-    assert Auth.get_user("rico@gmail.com") == get_user
+    assert Authsense.Service.get_user("rico@gmail.com") == get_user
   end
 
   test "get_user failure" do
-    assert Auth.get_user("nobody@gmail.com") == nil
+    assert Authsense.Service.get_user("nobody@gmail.com") == nil
   end
 
   @tag :pending

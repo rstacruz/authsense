@@ -71,50 +71,6 @@ defmodule Authsense do
   end
 
   @doc """
-  Checks if someone can authenticate with a given username/password pair.
-
-  Works on both Ecto changesets or tuples.
-
-      %User{}
-      |> change(%{ email: "rico@gmail.com", password: "password" })
-      |> Auth.authenticate
-
-      Auth.authenticate({ "rico@gmail.com", "password" })
-
-  Returns `{:ok, user}` on success, or `{:error, changeset}` on failure. If
-  used as a tuple, it returns `{:error, nil}` on failure.
-
-  Typically used within a login action.
-
-      def login_create(conn, %{"user" => user_params}) do
-        changeset = User.changeset(%User{}, user_params)
-
-        case Auth.authenticate(changeset) do
-          {:ok, user} ->
-            conn
-            |> Auth.put_current_user(user)
-            |> put_flash(:info, "Welcome.")
-            |> redirect(to: "/")
-
-          {:error, changeset} ->
-            render(conn, "login.html", changeset: changeset)
-        end
-      end
-  """
-  @callback authenticate(Ecto.Changeset.t | { String.t, String.t }) ::
-    {:error, Ecto.Changeset.t} |
-    {:error, nil} |
-    {:ok, Ecto.Schema.t}
-
-  @doc """
-  Loads a user by a given identity field value. Returns a nil on failure.
-
-      get_user("rico@gmail.com")  #=> %User{...}
-  """
-  @callback get_user(String.t) ::
-    Ecto.Schema.t | nil
-
-  @doc """
   Sets the current user for the session.
 
       conn
@@ -135,7 +91,11 @@ defmodule Authsense do
   @callback put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
     Plug.Conn.t
 
-  def config do # no model
+  def config do
+    config(nil)
+  end
+
+  def config(nil) do # no model
     [ _, conf | _ ] = Application.get_all_env(:authsense)
     { model, conf } = conf
     conf
@@ -181,12 +141,6 @@ defmodule Authsense do
     quote do
       @behaviour Authsense
       @auth_options Map.merge(Authsense.defaults, Enum.into(unquote(opts), %{}))
-
-      def authenticate(credentials), do:
-        Authsense.Service.authenticate(credentials, @auth_options)
-
-      def get_user(email), do:
-        Authsense.Service.get_user(email, @auth_options)
 
       def put_current_user(conn, user), do:
         Authsense.Plug.put_current_user(conn, user)
