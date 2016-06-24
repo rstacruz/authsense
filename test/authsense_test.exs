@@ -34,13 +34,4 @@ defmodule AuthsenseTest do
     config = Authsense.config([])
     assert config.model == Authsense.Test.User
   end
-
-  @tag :pending
-  test "put_current_user"
-
-  @tag :pending
-  test "fetch_current_user"
-
-  @tag :pending
-  test "config"
 end
