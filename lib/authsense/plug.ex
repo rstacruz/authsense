@@ -32,7 +32,9 @@ defmodule Authsense.Plug do
     conn
   end
 
-  def fetch_current_user(conn, %{model: model, repo: repo}) do
+  def fetch_current_user(conn, opts \\ []) do
+    %{repo: repo, model: model} = Authsense.config(opts)
+
     case get_session(conn, :current_user_id) do
       nil ->
         assign(conn, :current_user, nil)
