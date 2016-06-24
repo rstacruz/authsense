@@ -5,29 +5,26 @@ defmodule Authsense do
   ### Basic use
   Create your own module and use Authsense.
 
-      defmodule Myapp.Auth do
-        use Authsense,
-          repo: Myapp.Auth,
-          model: Myapp.User
-      end
+      config :authsense, Myapp.Model,
+        repo: Myapp.Repo
 
   ## Authentication
-  `authenticate/1` will validate a login.
+  `Authsense.Service.authenticate/2` will validate a login.
 
-      Auth.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
-      Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
+      authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
+      authenticate({ "userid", "password" })  #=> %User{} | nil
 
   ## Logging in/out
-  `put_current_user/2` will set session variables for logging in or out.
+  `Authsense.Plug.put_current_user/2` will set session variables for logging in or out.
 
-        conn |> Auth.put_current_user(user)  # login
-        conn |> Auth.put_current_user(nil)   # logout
+        conn |> put_current_user(user)  # login
+        conn |> put_current_user(nil)   # logout
 
   ## Get current user
-  `fetch_current_user/2` - to get authentication data, use `Auth` as a plug:
+  `Authsense.Plug.fetch_current_user/2` - to get authentication data, use `Auth` as a plug:
 
       # controller
-      import Auth
+      import Authsense.Plug
       plug :fetch_current_user
 
   When using this plug, you can then get the current user:
@@ -35,13 +32,13 @@ defmodule Authsense do
       conn.assigns.current_user  #=> %User{} | nil
 
   ## Usage in models
-  `generate_hashed_password/1` will update `:hashed_password` in a user changeset.
+  `Authsense.Service.generate_hashed_password/2` will update `:hashed_password` in a user changeset.
 
       User.changeset(...)
-      |> Auth.generate_hashed_password()
+      |> generate_hashed_password()
 
   ## Configuration
-  Set configuration using `use Authsense, repo: Myapp.Repo, ...`. These keys are available:
+  These keys are available:
 
   - `repo` (required) - the Ecto repo to connect to.
   - `model` (required) - the user model to use.
@@ -58,36 +55,16 @@ defmodule Authsense do
   """
 
   @doc false
-  def defaults do
-    %{
-      crypto: Comeonin.Pbkdf2,
-      identity_field: :email,
-      password_field: :password,
-      hashed_password_field: :hashed_password,
-      login_error: "Invalid credentials.",
-      repo: nil,
-      model: nil
-    }
-  end
+  @defaults %{
+    crypto: Comeonin.Pbkdf2,
+    identity_field: :email,
+    password_field: :password,
+    hashed_password_field: :hashed_password,
+    login_error: "Invalid credentials.",
+    repo: nil,
+    model: nil
+  }
 
-  @doc """
-  Sets the current user for the session.
-
-      conn
-      |> Auth.put_current_user(user)
-      |> put_flash(:info, "Welcome.")
-      |> redirect(to: "/")
-
-  To logout, set it to nil.
-
-      conn
-      |> Auth.put_current_user(nil)
-      |> put_flash(:info, "You've been logged out.")
-      |> redirect(to: "/")
-
-  This sets the `:current_user_id` in the Session store. To access the User
-  model, use `Auth` as a plug (see `Authsense.Plug`).
-  """
   @callback put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) ::
     Plug.Conn.t
 
@@ -100,7 +77,7 @@ defmodule Authsense do
     { model, conf } = conf
     conf
     |> Enum.into(%{ model: model })
-    |> Enum.into(defaults)
+    |> Enum.into(@defaults)
   end
 
   def config(model) do
@@ -109,44 +86,6 @@ defmodule Authsense do
     { model, conf } = conf
     conf
     |> Enum.into(%{ model: model })
-    |> Enum.into(defaults)
-  end
-
-
-  @doc """
-  Sets the `:current_user` assigns variable based on session.
-
-      defmodule Auth do
-        use Authsense, # ...
-      end
-
-      # in your controller or pipeline:
-      import Auth
-      plug :fetch_current_user
-
-  By doing so, you'll get access to the `:current_user` assigns. It will be set
-  to the User model if logged in, or to `nil` if logged out.
-
-      conn.assigns.current_user
-
-      <%= if @current_user %>
-        Hello, <%= @current_user.name %>
-      <% else %>
-        You are not logged in.
-      <% end %>
-  """
-  @callback fetch_current_user(Plug.Conn.t, []) :: Plug.Conn.t
-
-  defmacro __using__(opts \\ []) do
-    quote do
-      @behaviour Authsense
-      @auth_options Map.merge(Authsense.defaults, Enum.into(unquote(opts), %{}))
-
-      def put_current_user(conn, user), do:
-        Authsense.Plug.put_current_user(conn, user)
-
-      def fetch_current_user(conn, _opts \\ []), do:
-        Authsense.Plug.fetch_current_user(conn, @auth_options)
-    end
+    |> Enum.into(@defaults)
   end
 end

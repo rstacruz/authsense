@@ -7,7 +7,26 @@ defmodule Authsense.Plug do
     [get_session: 2, put_session: 3, delete_session: 2, assign: 3]
 
   @doc """
-  Adds `:current_user` to the assigns.
+  Sets the `:current_user` assigns variable based on session.
+
+      defmodule Auth do
+        use Authsense, # ...
+      end
+
+      # in your controller or pipeline:
+      import Auth
+      plug :fetch_current_user
+
+  By doing so, you'll get access to the `:current_user` assigns. It will be set
+  to the User model if logged in, or to `nil` if logged out.
+
+      conn.assigns.current_user
+
+      <%= if @current_user %>
+        Hello, <%= @current_user.name %>
+      <% else %>
+        You are not logged in.
+      <% end %>
   """
   def fetch_current_user(%Plug.Conn{assigns: %{ current_user: _ }} = conn, _) do
     conn
@@ -29,7 +48,22 @@ defmodule Authsense.Plug do
   end
 
   @doc """
-  See `Authsense.put_current_user/2`.
+  Sets the current user for the session.
+
+      conn
+      |> Auth.put_current_user(user)
+      |> put_flash(:info, "Welcome.")
+      |> redirect(to: "/")
+
+  To logout, set it to nil.
+
+      conn
+      |> Auth.put_current_user(nil)
+      |> put_flash(:info, "You've been logged out.")
+      |> redirect(to: "/")
+
+  This sets the `:current_user_id` in the Session store. To access the User
+  model, use `Auth` as a plug (see `Authsense.Plug`).
   """
   def put_current_user(conn, nil) do
     conn
