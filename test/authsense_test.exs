@@ -30,6 +30,11 @@ defmodule AuthsenseTest do
     assert config.foo == :bar
   end
 
+  test "accepts empty lists" do
+    config = Authsense.config([])
+    assert config.model == Authsense.Test.User
+  end
+
   @tag :pending
   test "put_current_user"
 

@@ -51,12 +51,7 @@ defmodule Authsense.Plug do
       nil ->
         assign(conn, :current_user, nil)
       id ->
-        user = try do
-          repo.get!(model, id)
-        rescue _ ->
-          # Protection against "logged in" users whos accounts get deleted.
-          nil
-        end
+        user = repo.get(model, id)
         assign(conn, :current_user, user)
     end
   end

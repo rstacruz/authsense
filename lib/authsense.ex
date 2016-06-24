@@ -98,6 +98,10 @@ defmodule Authsense do
     |> Enum.into(@defaults)
   end
 
+  def config([]) do
+    config(nil)
+  end
+
   def config(opts) when is_list(opts) do
     model = opts[:model]
 
