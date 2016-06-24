@@ -15,51 +15,40 @@ def deps do
 end
 ```
 
-Ensure authsense is started before your application:
-
-```elixir
-def application do
-  [applications: [:authsense]]
-end
-```
-
 ## Overview
 
 Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for full details.
 
-Create a module:
+Configure authsense:
 
 ```elixir
-defmodule Myapp.Auth do
-  use Authsense,
-    repo: Myapp.Auth,
-    model: Myapp.User
-end
+config :authsense, Myapp.User,
+   repo: Myapp.Repo
 ```
 
 You can then call some helpers for authentication:
 
 ```elixir
 # For login actions
-Auth.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
-Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
+Authsense.Service.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
+Authsense.Service.authenticate({ "userid", "password" })  #=> %User{} | nil
 ```
 
 ```elixir
 # For login/logout actions
-conn |> Auth.put_current_user(user)  # login
-conn |> Auth.put_current_user(nil)   # logout
+conn |> Authsense.Plug.put_current_user(user)  # login
+conn |> Authsense.Plug.put_current_user(nil)   # logout
 ```
 
 ```elixir
 # For model changesets
 changeset
-|> Auth.generate_hashed_password()
+|> Authsense.Service.generate_hashed_password()
 ```
 
 ```elixir
 # For controllers
-import Auth
+import Authsense.Plug
 plug :fetch_current_user
 conn.assigns.current_user  #=> %User{} | nil
 ```
