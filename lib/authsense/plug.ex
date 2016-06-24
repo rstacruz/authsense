@@ -1,6 +1,18 @@
 defmodule Authsense.Plug do
   @moduledoc """
-  See `Authsense.call/2`.
+  Plug helpers for Authsense.
+
+  You can use most of these functions as plugs.
+
+      # in your controller or pipeline:
+      import Authsense.Plug
+      plug :fetch_current_user
+
+  You can specify additional options.
+
+      plug :fetch_current_user,
+        repo: MyApp.Repo,
+        model: MyApp.User
   """
 
   import Plug.Conn, only:
@@ -9,12 +21,8 @@ defmodule Authsense.Plug do
   @doc """
   Sets the `:current_user` assigns variable based on session.
 
-      defmodule Auth do
-        use Authsense, # ...
-      end
-
       # in your controller or pipeline:
-      import Auth
+      import Authsense.Plug
       plug :fetch_current_user
 
   By doing so, you'll get access to the `:current_user` assigns. It will be set
