@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.12.0">
+    <title>Recipes – authsense v0.2.0</title>
+    <link rel="stylesheet" href="dist/app-88251e7c81.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="extras">
+
+<div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="Authsense.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        authsense
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.0
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+<h1>Recipes</h1>
+<h2 id="user-model"> User model</h2><p>Aside from the obvious <code class="inline">:email</code> and <code class="inline">:hashed_password</code>, you should have
+<code class="inline">:password</code> and <code class="inline">:password_confirmation</code> <em>virtual</em> fields for users. This
+allows you to have your forms ask users for their <code class="inline">:password</code>.</p>
+<pre><code class="elixir">schema &quot;users&quot; do
+  field :email, :string
+  field :hashed_password, :string
+  field :password, :string, virtual: true
+  field :password_confirmation, :string, virtual: true
+
+  timestamps
+end</code></pre>
+<p>Use <code class="inline">Authsense.Serviec.generate_hashed_password/2</code> for their changesets. This
+way, when updating or creating users, any new <code class="inline">:password</code> fields will be hashed
+into <code class="inline">:hashed_password</code>.</p>
+<pre><code class="elixir"># ecto 2.0
+def changeset(model, params \\ []) do
+  model
+  |&gt; cast(params, [:email, :password, :password_confirmation])
+  |&gt; Authsense.Service.generate_hashed_password()
+  |&gt; validate_confirmation(:password, message: &quot;password confirmation doesn&#39;t match&quot;)
+  |&gt; unique_constraint(:email)
+end</code></pre>
+<h2 id="login-page"> Login page</h2><p>I typically like having an <code class="inline">SessionController</code> handle logins and logouts.</p>
+<pre><code class="elixir"># web/router.ex
+get &quot;/login&quot;,  SessionController, :new
+post &quot;/login&quot;, SessionController, :create
+get &quot;/logout&quot;, SessionController, :delete</code></pre>
+<p><code class="inline">SessionController.new</code> gets you a form. Use a changeset here.</p>
+<pre><code class="elixir"># web/controllers/session_controller.ex
+
+def new(conn, params) do
+  changeset = User.changeset(%User{})
+  render(conn, &quot;new.html&quot;, changeset: changeset)
+end</code></pre>
+<p><code class="inline">SessionController.create</code> logs someone in (creates a session) using <a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a>.</p>
+<pre><code class="elixir">def create(conn, %{&quot;user&quot; =&gt; user_params}) do
+  changeset = User.changeset(%User{}, user_params)
+
+  case Auth.authenticate(changeset) do
+    {:ok, user} -&gt;
+      conn
+      |&gt; Auth.put_current_user(user)
+      |&gt; put_flash(:info, &quot;Welcome.&quot;)
+      |&gt; redirect(to: &quot;/&quot;)
+    {:error, changeset} -&gt;
+      render(conn, &quot;new.html&quot;, changeset: changeset)
+  end
+end</code></pre>
+<p><code class="inline">sessionController.delete</code> logs you out using <a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a>.</p>
+<pre><code class="elixir">def logout(conn, _params) do
+  conn
+  |&gt; Authsense.Plug.put_current_user(nil)
+  |&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
+  |&gt; redirect(to: &quot;/&quot;)
+end</code></pre>
+<h2 id="register-sign-up"> Register/sign up</h2><p>This is just a simple <code class="inline">create</code> action for users.</p>
+<h2 id="secure-pages"> Secure pages</h2><p><em>(To be documented)</em></p>
+<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <a href="Authsense.Plug.html#fetch_current_user/2"><code class="inline">Authsense.Plug.fetch_current_user/2</code></a> to
+authenticate based on something else other than passwords.</p>
+<pre><code class="elixir">def authenticate_by_token(conn, _opts \\ []) do
+  token = conn.params.token
+  case Repo.get_by(User, api_token: token) do
+    user -&gt;
+      assign(conn, :current_user, user)
+    _ -&gt;
+      conn
+  end
+end</code></pre>
+<pre><code class="elixir"># web/router.ex
+pipeline :api do
+  plug :authenticate_by_token
+end</code></pre>
+<h2 id="forgot-your-password"> Forgot your password</h2><p>You’ll need to create 4 actions: one for the “forgot your password” page, one
+for the “reset your password” page, and one submission action for each of those.</p>
+<p>You’ll also need a <code class="inline">:perishable_token</code> in your User model.</p>
+<h3>GET /forgot_password</h3>
+<ul>
+<li>Show the “enter your email” form.
+</li>
+</ul>
+<h3>POST /forgot_password</h3>
+<ul>
+<li><p>Update the user’s perishable token.</p>
+<pre><code class="elixir">user
+|&gt; change(:perishable_token, Ecto.UUID.generate)
+|&gt; Repo.update()</code></pre>
+</li>
+<li>Send an email to the user with a link to <code class="inline">/update_password?token=...</code>.
+</li>
+</ul>
+<h3>GET /update_password?token=…</h3>
+<ul>
+<li><p>Find the user with the given token.</p>
+<pre><code class="elixir">Repo.get_by(User, perishable_token: token)</code></pre>
+</li>
+<li>Show the “enter your new password” form.
+</li>
+</ul>
+<h3>POST /update_password?token=…</h3>
+<ul>
+<li>Find the user with the given token.
+</li>
+<li><p>Update their password and clear their perishable token.</p>
+<pre><code class="elixir">user
+|&gt; User.changeset(user_params)
+|&gt; change(:perishable_token, nil)
+|&gt; Repo.update()</code></pre>
+</li>
+</ul>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.12.0),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-21f1a20b9e.js"></script>
+  </body>
+</html>
+

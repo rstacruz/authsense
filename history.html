@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.12.0">
+    <title>HISTORY – authsense v0.2.0</title>
+    <link rel="stylesheet" href="dist/app-88251e7c81.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="extras">
+
+<div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="Authsense.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        authsense
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.0
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+<h2><a href="https://github.com/rstacruz/authsense/compare/v0.1.0...v0.2.0" title="">v0.2.0</a></h2>
+<blockquote><p>Jun 25, 2016</p>
+</blockquote>
+<p>Authsense’s API has been significantly rewritten. It now uses <code class="inline">Mix.Config</code> for configuration.</p>
+<pre><code class="elixir">config :authsense,
+  Myapp.User,
+  repo: Myapp.Repo</code></pre>
+<p>Instead of <code class="inline">Auth.*</code>, the functions are now in <a href="Authsense.Service.html"><code class="inline">Authsense.Service</code></a> and <a href="Authsense.Plug.html"><code class="inline">Authsense.Plug</code></a>.</p>
+<pre><code class="elixir">changeset
+|&gt; Authsense.Service.generate_hashed_password()
+
+conn
+|&gt; Authsense.Plug.fetch_current_user()</code></pre>
+<p>The new Mix-based config now means the module-based configuration is now deprecated.</p>
+<pre><code class="elixir"># &lt;DEPRECATED&gt;
+defmodule Myapp.Auth do
+  use Authsense,
+    model: Myapp.User,
+    repo: Myapp.Repo
+end
+# &lt;/DEPRECATED&gt;</code></pre>
+<h2><a href="https://github.com/rstacruz/authsense/tree/v0.1.0" title="">v0.1.0</a></h2>
+<blockquote><p>Jun 23, 2016</p>
+</blockquote>
+<ul>
+<li>Initial release.
+</li>
+</ul>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.12.0),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-21f1a20b9e.js"></script>
+  </body>
+</html>
+
