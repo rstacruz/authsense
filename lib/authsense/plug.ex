@@ -18,6 +18,8 @@ defmodule Authsense.Plug do
   import Plug.Conn, only:
     [get_session: 2, put_session: 3, delete_session: 2, assign: 3]
 
+  alias Plug.Conn
+
   @doc """
   Sets the `:current_user` assigns variable based on session.
 
@@ -36,11 +38,13 @@ defmodule Authsense.Plug do
         You are not logged in.
       <% end %>
   """
-  def fetch_current_user(%Plug.Conn{assigns: %{ current_user: _ }} = conn, _) do
+  def fetch_current_user(conn, opts \\ [])
+  def fetch_current_user(%Conn{assigns: %{ current_user: _ }} = conn, _) do
+    # Already ran fetch_current_user; no need to do so again.
     conn
   end
 
-  def fetch_current_user(conn, opts \\ []) do
+  def fetch_current_user(conn, opts) do
     %{repo: repo, model: model} = Authsense.config(opts)
 
     case get_session(conn, :current_user_id) do
