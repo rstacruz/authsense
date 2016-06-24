@@ -55,5 +55,6 @@ defmodule PlugTest do
     |> Authsense.Plug.fetch_current_user()
 
     assert get_session(conn, :current_user_id) == user.id
+    assert conn.assigns.current_user == user
   end
 end
