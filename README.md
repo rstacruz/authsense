@@ -10,16 +10,7 @@ Add authsense to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  #[{:authsense, "~> 0.0.1"}]
-  [{:authsense, git: "https://github.com/rstacruz/authsense.git"}]
-end
-```
-
-Ensure authsense is started before your application:
-
-```elixir
-def application do
-  [applications: [:authsense]]
+  [{:authsense, "~> 0.2.0"}]
 end
 ```
 
@@ -27,44 +18,41 @@ end
 
 Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for full details.
 
-Create a module:
+Configure authsense:
 
 ```elixir
-defmodule Myapp.Auth do
-  use Authsense,
-    repo: Myapp.Auth,
-    model: Myapp.User
-end
+config :authsense, Myapp.User,
+   repo: Myapp.Repo
 ```
 
 You can then call some helpers for authentication:
 
 ```elixir
 # For login actions
-Auth.authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
-Auth.authenticate({ "userid", "password" })  #=> %User{} | nil
+authenticate(changeset)  #=> {:ok, user} or {:error, changeset_with_errors}
+authenticate({ "userid", "password" })  #=> %User{} | nil
 ```
 
 ```elixir
 # For login/logout actions
-conn |> Auth.put_current_user(user)  # login
-conn |> Auth.put_current_user(nil)   # logout
+conn |> put_current_user(user)  # login
+conn |> put_current_user(nil)   # logout
 ```
 
 ```elixir
 # For model changesets
 changeset
-|> Auth.generate_hashed_password()
+|> generate_hashed_password()
 ```
 
 ```elixir
 # For controllers
-import Auth
+import Authsense.Plug
 plug :fetch_current_user
 conn.assigns.current_user  #=> %User{} | nil
 ```
 
-Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) for more.
+Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) detailed info.
 
 ## Thanks
 

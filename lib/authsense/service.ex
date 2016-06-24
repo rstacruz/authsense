@@ -1,13 +1,50 @@
 defmodule Authsense.Service do
+  @moduledoc """
+  Functions for working with models or changesets.
+  """
+
   import Ecto.Changeset, only:
     [get_change: 2, put_change: 3, validate_change: 3]
 
+  alias Ecto.Changeset
+
   @doc """
-  See `Authsense.authenticate/2`.
+  Checks if someone can authenticate with a given username/password pair.
+
+  Credentials can be given as either an Ecto changeset or a tuple.
+
+      # Changeset:
+      %User{}
+      |> change(%{ email: "rico@gmail.com", password: "password" })
+      |> authenticate()
+
+      # Tuple:
+      authenticate({ "rico@gmail.com", "password" })
+
+  Returns `{:ok, user}` on success, or `{:error, changeset}` on failure. If
+  used as a tuple, it returns `{:error, nil}` on failure.
+
+  Typically used within a login action.
+
+      def login_create(conn, %{"user" => user_params}) do
+        changeset = User.changeset(%User{}, user_params)
+
+        case authenticate(changeset) do
+          {:ok, user} ->
+            conn
+            |> Auth.put_current_user(user)
+            |> put_flash(:info, "Welcome.")
+            |> redirect(to: "/")
+
+          {:error, changeset} ->
+            render(conn, "login.html", changeset: changeset)
+        end
+      end
   """
-  def authenticate(credentials, %{} = opts) do
-    case authenticate_user(credentials, opts) do
-      false -> {:error, auth_failure(credentials, opts)}
+  def authenticate(changeset_or_tuple, model \\ nil)
+  def authenticate(credentials, model) do
+    case authenticate_user(credentials, model) do
+      false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
   end
@@ -21,20 +58,21 @@ defmodule Authsense.Service do
       authenticate_user(changeset)
       authenticate_user({ email, password })
   """
-  def authenticate_user(
-    %Ecto.Changeset{} = changeset,
-    %{identity_field: id, password_field: passwd} = opts)
-  do
+  def authenticate_user(changeset_or_tuple, model \\ nil)
+  def authenticate_user(%Changeset{} = changeset, model) do
+    %{identity_field: id, password_field: passwd} =
+      Authsense.config(model)
+
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
-    authenticate_user({email, password}, opts)
+    authenticate_user({email, password}, model)
   end
 
-  def authenticate_user(
-    {email, password},
-    %{crypto: crypto, hashed_password_field: hashed_passwd} = opts)
-  do
-    user = get_user(email, opts)
+  def authenticate_user({email, password}, model) do
+    %{crypto: crypto, hashed_password_field: hashed_passwd} =
+      Authsense.config(model)
+
+    user = get_user(email, model)
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -43,20 +81,44 @@ defmodule Authsense.Service do
   end
 
   @doc """
-  See `Authsense.get_user/1`.
+  Loads a user by a given identity field value. Returns a nil on failure.
+
+      get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, %{repo: repo, model: model, identity_field: id}) do
+  def get_user(email, model \\ nil) do
+    %{repo: repo, model: model, identity_field: id} =
+      Authsense.config(model)
+
     repo.get_by(model, [{id, email}])
   end
 
   @doc """
-  See `Authsense.generate_hashed_password/1`.
+  Updates an `Ecto.Changeset` to generate a hashed password.
+
+  If the changeset has `:password` in it, it will be hashed and stored as
+  `:hashed_password`.  (Fields can be configured in `Authsense`.)
+
+      changeset
+      |> generate_hashed_password()
+
+  It's typically used in a model's `changeset/2` function.
+
+      defmodule Example.User do
+        use Example.Web, :model
+
+        def changeset(model, params \\ []) do
+          model
+          |> cast(params, [:email, :password, :password_confirmation])
+          |> generate_hashed_password()
+          |> validate_confirmation(:password, message: "password confirmation doesn't match")
+          |> unique_constraint(:email)
+        end
+      end
   """
-  def generate_hashed_password(
-    %Ecto.Changeset{} = changeset,
+  def generate_hashed_password(%Changeset{} = changeset, model \\ nil) do
     %{password_field: passwd, hashed_password_field: hashed_passwd,
-      crypto: crypto})
-  do
+      crypto: crypto} = Authsense.config(model)
+
     case get_change(changeset, passwd) do
       nil ->
         changeset
@@ -66,10 +128,12 @@ defmodule Authsense.Service do
     end
   end
 
-  defp auth_failure(
-    %Ecto.Changeset{} = changeset,
-    %{password_field: passwd, login_error: login_error})
-  do
+  # Adds errors to a changeset.
+  # Used by `authenticate/2`.
+  defp auth_failure(%Changeset{} = changeset, model) do
+    %{password_field: passwd, login_error: login_error} =
+      Authsense.config(model)
+
     changeset
     |> validate_change(passwd, fn _, _ -> [{passwd, login_error}] end)
   end
