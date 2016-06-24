@@ -70,7 +70,15 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>See <code class="inline">Authsense.call/2</code>.</p>
+          <p>Plug helpers for Authsense.</p>
+<p>You can use most of these functions as plugs.</p>
+<pre><code class="elixir"># in your controller or pipeline:
+import Authsense.Plug
+plug :fetch_current_user</code></pre>
+<p>You can specify additional options.</p>
+<pre><code class="elixir">plug :fetch_current_user,
+  repo: MyApp.Repo,
+  model: MyApp.User</code></pre>
 
         </section>
       
@@ -92,10 +100,10 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#fetch_current_user/2">fetch_current_user(conn, arg2)</a>
+    <a href="#fetch_current_user/2">fetch_current_user(conn, opts \\ [])</a>
   </div>
   
-    <div class="summary-synopsis"><p>Adds <code class="inline">:current_user</code> to the assigns</p>
+    <div class="summary-synopsis"><p>Sets the <code class="inline">:current_user</code> assigns variable based on session</p>
 </div>
   
 </div>
@@ -104,7 +112,7 @@
     <a href="#put_current_user/2">put_current_user(conn, user)</a>
   </div>
   
-    <div class="summary-synopsis"><p>See <code class="inline">Authsense.put_current_user/2</code></p>
+    <div class="summary-synopsis"><p>Sets the current user for the session</p>
 </div>
   
 </div>
@@ -134,9 +142,9 @@
     <a href="#fetch_current_user/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">fetch_current_user(conn, arg2)</span>
+    <span class="signature">fetch_current_user(conn, opts \\ [])</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense/plug.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense/plug.ex#L41" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -144,7 +152,19 @@
   </div>
   
   <section class="docstring">
-    <p>Adds <code class="inline">:current_user</code> to the assigns.</p>
+    <p>Sets the <code class="inline">:current_user</code> assigns variable based on session.</p>
+<pre><code class="elixir"># in your controller or pipeline:
+import Authsense.Plug
+plug :fetch_current_user</code></pre>
+<p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
+to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
+<pre><code class="elixir">conn.assigns.current_user
+
+&lt;%= if @current_user %&gt;
+  Hello, &lt;%= @current_user.name %&gt;
+&lt;% else %&gt;
+  You are not logged in.
+&lt;% end %&gt;</code></pre>
 
   </section>
 </div>
@@ -155,7 +175,7 @@
     </a>
     <span class="signature">put_current_user(conn, user)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense/plug.ex#L34" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense/plug.ex#L78" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -163,7 +183,19 @@
   </div>
   
   <section class="docstring">
-    <p>See <code class="inline">Authsense.put_current_user/2</code>.</p>
+    <p>Sets the current user for the session.</p>
+<pre><code class="elixir">import Authsense.Plug
+
+conn
+|&gt; put_current_user(user)
+|&gt; put_flash(:info, &quot;Welcome.&quot;)
+|&gt; redirect(to: &quot;/&quot;)</code></pre>
+<p>To logout, set it to nil.</p>
+<pre><code class="elixir">conn
+|&gt; put_current_user(nil)
+|&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
+|&gt; redirect(to: &quot;/&quot;)</code></pre>
+<p>This sets the <code class="inline">:current_user_id</code> in the Session store.</p>
 
   </section>
 </div>

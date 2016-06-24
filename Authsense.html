@@ -61,8 +61,6 @@
         <small class="visible-xs">authsense v0.1.0</small>
         Authsense
         
-          <small>behaviour</small>
-        
         
           <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
@@ -74,33 +72,39 @@
         <section id="moduledoc" class="docstring">
           <p>Sensible authentication helpers for Phoenix/Ecto.</p>
 <h3>Basic use</h3>
-<p>Create your own module and use Authsense.</p>
-<pre><code class="elixir">defmodule Myapp.Auth do
-  use Authsense,
-    repo: Myapp.Auth,
-    model: Myapp.User
-end</code></pre>
+<p>Specify your configuration via Mix.Config in <code class="inline">config/config.exs</code>.</p>
+<pre><code class="elixir">config :authsense, Myapp.Model,
+  repo: Myapp.Repo</code></pre>
 <h2>Authentication</h2>
-<p><code class="inline">authenticate/1</code> will validate a login.</p>
-<pre><code class="elixir">Auth.authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
-Auth.authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
+<p><a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a> will validate a login.</p>
+<pre><code class="elixir">authenticate(changeset)  #=&gt; {:ok, user} or {:error, changeset_with_errors}
+authenticate({ &quot;userid&quot;, &quot;password&quot; })  #=&gt; %User{} | nil</code></pre>
 <h2>Logging in/out</h2>
-<p><code class="inline">put_current_user/2</code> will set session variables for logging in or out.</p>
-<pre><code class="elixir">  conn |&gt; Auth.put_current_user(user)  # login
-  conn |&gt; Auth.put_current_user(nil)   # logout</code></pre>
+<p><a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a> will set session variables for logging in or out.</p>
+<pre><code class="elixir">  conn |&gt; put_current_user(user)  # login
+  conn |&gt; put_current_user(nil)   # logout</code></pre>
 <h2>Get current user</h2>
-<p><code class="inline">fetch_current_user/2</code> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
+<p><a href="Authsense.Plug.html#fetch_current_user/2"><code class="inline">Authsense.Plug.fetch_current_user/2</code></a> - to get authentication data, use <code class="inline">Auth</code> as a plug:</p>
 <pre><code class="elixir"># controller
-import Auth
+import Authsense.Plug
 plug :fetch_current_user</code></pre>
 <p>When using this plug, you can then get the current user:</p>
 <pre><code class="elixir">conn.assigns.current_user  #=&gt; %User{} | nil</code></pre>
 <h2>Usage in models</h2>
-<p><code class="inline">generate_hashed_password/1</code> will update <code class="inline">:hashed_password</code> in a user changeset.</p>
+<p><a href="Authsense.Service.html#generate_hashed_password/2"><code class="inline">Authsense.Service.generate_hashed_password/2</code></a> will update <code class="inline">:hashed_password</code> in a user changeset.</p>
 <pre><code class="elixir">User.changeset(...)
-|&gt; Auth.generate_hashed_password()</code></pre>
+|&gt; generate_hashed_password()</code></pre>
 <h2>Configuration</h2>
-<p>Set configuration using <code class="inline">use Authsense, repo: Myapp.Repo, ...</code>. These keys are available:</p>
+<p>Specify your configuration via Mix.Config in <code class="inline">config/config.exs</code>.</p>
+<pre><code class="elixir">config :authsense, Myapp.User,
+  repo: Myapp.Repo</code></pre>
+<p>If you have more than one user, you can specify multiple configurations. (See <a href="#config/1"><code class="inline">config/1</code></a> on info on how this is dealt with)</p>
+<pre><code class="elixir">config :authsense, Myapp.User,
+  repo: Myapp.Repo
+
+config :authsense, Myapp.AdminUser,
+  repo: Myapp.Repo</code></pre>
+<p>These keys are available:</p>
 <ul>
 <li><code class="inline">repo</code> (required) - the Ecto repo to connect to.
 </li>
@@ -114,9 +118,10 @@ plug :fetch_current_user</code></pre>
 </li>
 <li><code class="inline">hashed_password_field</code> - field where the password is stored. (default: <code class="inline">:hashed_password</code>)
 </li>
-<li><code class="inline">login_error</code> - the error to add to the changeset on <code class="inline">Auth.authenticate/1</code>. (default: “Invalid credentials.”)
+<li><code class="inline">login_error</code> - the error to add to the changeset on <a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a>. (default: <em>”Invalid credentials.”</em>)
 </li>
 </ul>
+<p><a href="#config/1"><code class="inline">config/1</code></a> has more info on how config is used.</p>
 <h2>Recipes</h2>
 <p>For information on how to build login pages, secure your website, and other
 things: see <a href="recipes.html">Recipes</a>.</p>
@@ -135,62 +140,35 @@ things: see <a href="recipes.html">Recipes</a>.</p>
           
 
           
-
-          
-
-          
-  <div class="summary-callbacks summary">
+  <div class="summary-functions summary">
     <h2>
-      <a href="#callbacks">Callbacks</a>
+      <a href="#functions">Functions</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:authenticate/1">authenticate(arg0)</a>
+    <a href="#config/0">config()</a>
   </div>
   
-    <div class="summary-synopsis"><p>Checks if someone can authenticate with a given username/password pair</p>
+    <div class="summary-synopsis"><p><em>Internal:</em> Retrieves default configuration</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:fetch_current_user/2">fetch_current_user(arg0, list)</a>
+    <a href="#config/1">config(opts)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sets the <code class="inline">:current_user</code> assigns variable based on session</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:generate_hashed_password/1">generate_hashed_password(arg0)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Updates an <code class="inline">Ecto.Changeset</code> to generate a hashed password</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:get_user/1">get_user(arg0)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Loads a user by a given identity field value. Returns a nil on failure</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:put_current_user/2">put_current_user(arg0, arg1)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Sets the current user for the session</p>
+    <div class="summary-synopsis"><p><em>Internal:</em> Retrieves configuration for a given model</p>
 </div>
   
 </div>
 
   </div>
 
+
+          
+
+          
 
         </section>
       
@@ -198,231 +176,83 @@ things: see <a href="recipes.html">Recipes</a>.</p>
       
 
       
-
-      
-
-      
-        <section id="callbacks" class="details-list">
+        <section id="functions" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#callbacks">
+            <a class="hover-link" href="#functions">
               <i class="icon-link"></i>
             </a>
-            Callbacks
+            Functions
           </h1>
-          <div class="detail" id="c:authenticate/1">
+          <div class="detail" id="config/0">
   <div class="detail-header">
-    <a href="#c:authenticate/1" class="detail-link" title="Link to this callback">
+    <a href="#config/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate(arg0)</span>
+    <span class="signature">config()</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L132" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L88" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">authenticate(Ecto.Changeset.t | {<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}) ::
-  {:error, Ecto.Changeset.t} |
-  {:error, nil} |
-  {:ok, Ecto.Schema.t}</code></pre>
-        
-      </div>
-    </div>
-  
   <section class="docstring">
-    <p>Checks if someone can authenticate with a given username/password pair.</p>
-<p>Works on both Ecto changesets or tuples.</p>
-<pre><code class="elixir">%User{}
-|&gt; change(%{ email: &quot;rico@gmail.com&quot;, password: &quot;password&quot; })
-|&gt; Auth.authenticate
-
-Auth.authenticate({ &quot;rico@gmail.com&quot;, &quot;password&quot; })</code></pre>
-<p>Returns <code class="inline">{:ok, user}</code> on success, or <code class="inline">{:error, changeset}</code> on failure. If
-used as a tuple, it returns <code class="inline">{:error, nil}</code> on failure.</p>
-<p>Typically used within a login action.</p>
-<pre><code class="elixir">def login_create(conn, %{&quot;user&quot; =&gt; user_params}) do
-  changeset = User.changeset(%User{}, user_params)
-
-  case Auth.authenticate(changeset) do
-    {:ok, user} -&gt;
-      conn
-      |&gt; Auth.put_current_user(user)
-      |&gt; put_flash(:info, &quot;Welcome.&quot;)
-      |&gt; redirect(to: &quot;/&quot;)
-
-    {:error, changeset} -&gt;
-      render(conn, &quot;login.html&quot;, changeset: changeset)
-  end
-end</code></pre>
+    <p><em>Internal:</em> Retrieves default configuration.</p>
+<p>See <a href="#config/1"><code class="inline">config/1</code></a> for more info.</p>
 
   </section>
 </div>
-<div class="detail" id="c:fetch_current_user/2">
+<div class="detail" id="config/1">
   <div class="detail-header">
-    <a href="#c:fetch_current_user/2" class="detail-link" title="Link to this callback">
+    <a href="#config/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">fetch_current_user(arg0, list)</span>
+    <span class="signature">config(opts)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L188" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L134" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">fetch_current_user(Plug.Conn.t, []) :: Plug.Conn.t</code></pre>
-        
-      </div>
-    </div>
-  
   <section class="docstring">
-    <p>Sets the <code class="inline">:current_user</code> assigns variable based on session.</p>
-<pre><code class="elixir">defmodule Auth do
-  use Authsense, # ...
-end
+    <p><em>Internal:</em> Retrieves configuration for a given model.</p>
+<h2>Practical use</h2>
+<p>This is used internally by other functions to retrieve your configuration. For example,
+you typically call <a href="Authsense.Service.html#authenticate/2"><code class="inline">Authsense.Service.authenticate/2</code></a> with one parameter:</p>
+<pre><code class="elixir">authenticate({&quot;rico@gmail.com&quot;, &quot;password&quot;})</code></pre>
+<p>But you may pass options to it to override the config:</p>
+<pre><code class="elixir">authenticate({&quot;rico@gmail.com&quot;, &quot;password&quot;},
+  hashed_password_field: :hashed_password)</code></pre>
+<p>Or if you provide multiple models to Authsense, you can pick which one to use:</p>
+<pre><code class="elixir">config :authsense,
+  Myapp.User, repo: MyApp.Repo
 
-# in your controller or pipeline:
-import Auth
-plug :fetch_current_user</code></pre>
-<p>By doing so, you’ll get access to the <code class="inline">:current_user</code> assigns. It will be set
-to the User model if logged in, or to <code class="inline">nil</code> if logged out.</p>
-<pre><code class="elixir">conn.assigns.current_user
+config :authsense,
+  Myapp.AdminUser, repo: MyApp.Repo
 
-&lt;%= if @current_user %&gt;
-  Hello, &lt;%= @current_user.name %&gt;
-&lt;% else %&gt;
-  You are not logged in.
-&lt;% end %&gt;</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="c:generate_hashed_password/1">
-  <div class="detail-header">
-    <a href="#c:generate_hashed_password/1" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">generate_hashed_password(arg0)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L99" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">generate_hashed_password(Ecto.Changeset.t) :: Ecto.Changeset.t</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Updates an <code class="inline">Ecto.Changeset</code> to generate a hashed password.</p>
-<p>If the changeset has <code class="inline">:password</code> in it, it will be hashed and stored as
-<code class="inline">:hashed_password</code>.  (Fields can be configured in <a href="Authsense.html#content"><code class="inline">Authsense</code></a>.)</p>
-<pre><code class="elixir">changeset
-|&gt; Auth.generate_hashed_password()</code></pre>
-<p>It’s typically used in a model’s <code class="inline">changeset/2</code> function.</p>
-<pre><code class="elixir">defmodule Example.User do
-  use Example.Web, :model
-
-  def changeset(model, params \ :empty) do
-    model
-    |&gt; cast(params, @required_fields, @optional_fields)
-    |&gt; Auth.generate_hashed_password()
-    |&gt; validate_confirmation(:password, message: &quot;password confirmation doesn&#39;t match&quot;)
-    |&gt; unique_constraint(:email)
-  end
-end</code></pre>
-<p>Also see <a href="Authsense.Service.html#generate_hashed_password/2"><code class="inline">Authsense.Service.generate_hashed_password/2</code></a> for the underlying
-implementation.</p>
-
-  </section>
-</div>
-<div class="detail" id="c:get_user/1">
-  <div class="detail-header">
-    <a href="#c:get_user/1" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_user(arg0)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L142" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_user(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: Ecto.Schema.t | nil</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Loads a user by a given identity field value. Returns a nil on failure.</p>
-<pre><code class="elixir">get_user(&quot;rico@gmail.com&quot;)  #=&gt; %User{...}</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="c:put_current_user/2">
-  <div class="detail-header">
-    <a href="#c:put_current_user/2" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">put_current_user(arg0, arg1)</span>
-    
-      <a href="https://github.com/rstacruz/authsense/blob/v0.1.0/lib/authsense.ex#L163" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">put_current_user(Plug.Conn.t, Ecto.Schema.t | nil) :: Plug.Conn.t</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Sets the current user for the session.</p>
-<pre><code class="elixir">conn
-|&gt; Auth.put_current_user(user)
-|&gt; put_flash(:info, &quot;Welcome.&quot;)
-|&gt; redirect(to: &quot;/&quot;)</code></pre>
-<p>To logout, set it to nil.</p>
-<pre><code class="elixir">conn
-|&gt; Auth.put_current_user(nil)
-|&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
-|&gt; redirect(to: &quot;/&quot;)</code></pre>
-<p>This sets the <code class="inline">:current_user_id</code> in the Session store. To access the User
-model, use <code class="inline">Auth</code> as a plug (see <a href="Authsense.Plug.html"><code class="inline">Authsense.Plug</code></a>).</p>
+authenticate({&quot;rico@gmail.com&quot;, &quot;password&quot;}, Myapp.User)
+authenticate({&quot;rico@gmail.com&quot;, &quot;password&quot;}, Myapp.AdminUser)</code></pre>
+<h2>Internal use</h2>
+<pre><code class="elixir">&gt; Authsense.config
+%{ model: Example.User, repo: Example.Repo, ... }</code></pre>
+<p>If there are multiple configurations, you can pass a <code class="inline">model</code>.</p>
+<pre><code class="elixir">&gt; Authsense.config(Example.User)
+%{ model: Example.User, repo: Example.Repo, ... }</code></pre>
+<p>You may also pass a list. Any values other than <code class="inline">model</code> will be added in.</p>
+<pre><code class="elixir">&gt; Authsense.config(model: Example.User, foo: :bar)
+%{ model: Example.User, ... foo: :bar }</code></pre>
 
   </section>
 </div>
 
         </section>
+      
+
+      
+
       
           <footer class="footer">
         <p>

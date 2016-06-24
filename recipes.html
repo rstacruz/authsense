@@ -69,30 +69,31 @@ allows you to have your forms ask users for their <code class="inline">:password
 
   timestamps
 end</code></pre>
-<p>Use <code class="inline">Auth.generate_hashed_password/2</code> for their changesets. This way, when
-updating or creating users, any new <code class="inline">:password</code> fields will be hashed into
-<code class="inline">:hashed_password</code>.</p>
-<pre><code class="elixir">def changeset(model, params \\ :empty) do
+<p>Use <code class="inline">Authsense.Serviec.generate_hashed_password/2</code> for their changesets. This
+way, when updating or creating users, any new <code class="inline">:password</code> fields will be hashed
+into <code class="inline">:hashed_password</code>.</p>
+<pre><code class="elixir"># ecto 2.0
+def changeset(model, params \\ []) do
   model
-  |&gt; cast(params, @required_fields, @optional_fields)
-  |&gt; Auth.generate_hashed_password()
+  |&gt; cast(params, [:email, :password, :password_confirmation])
+  |&gt; Authsense.Service.generate_hashed_password()
   |&gt; validate_confirmation(:password, message: &quot;password confirmation doesn&#39;t match&quot;)
   |&gt; unique_constraint(:email)
 end</code></pre>
-<h2 id="login-page"> Login page</h2><p>I typically like having an <code class="inline">AuthController</code> handle all auth-related actions.</p>
+<h2 id="login-page"> Login page</h2><p>I typically like having an <code class="inline">SessionController</code> handle logins and logouts.</p>
 <pre><code class="elixir"># web/router.ex
-get &quot;/login&quot;, AuthController, :login
-post &quot;/login&quot;, AuthController, :login_create
-get &quot;/logout&quot;, AuthController, :logout</code></pre>
-<p><code class="inline">AuthController.login</code> gets you a form. Use a changeset here.</p>
-<pre><code class="elixir"># web/controllers/auth_controller.ex
+get &quot;/login&quot;,  SessionController, :new
+post &quot;/login&quot;, SessionController, :create
+get &quot;/logout&quot;, SessionController, :delete</code></pre>
+<p><code class="inline">SessionController.new</code> gets you a form. Use a changeset here.</p>
+<pre><code class="elixir"># web/controllers/session_controller.ex
 
-def login(conn, params) do
+def new(conn, params) do
   changeset = User.changeset(%User{})
-  render(conn, &quot;login.html&quot;, changeset: changeset)
+  render(conn, &quot;new.html&quot;, changeset: changeset)
 end</code></pre>
-<p><code class="inline">AuthController.login_create</code> logs someone in (creates a session) using <code class="inline">Auth.put_current_user/2</code>.</p>
-<pre><code class="elixir">def login_create(conn, %{&quot;user&quot; =&gt; user_params}) do
+<p><code class="inline">SessionController.create</code> logs someone in (creates a session) using <a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a>.</p>
+<pre><code class="elixir">def create(conn, %{&quot;user&quot; =&gt; user_params}) do
   changeset = User.changeset(%User{}, user_params)
 
   case Auth.authenticate(changeset) do
@@ -102,39 +103,19 @@ end</code></pre>
       |&gt; put_flash(:info, &quot;Welcome.&quot;)
       |&gt; redirect(to: &quot;/&quot;)
     {:error, changeset} -&gt;
-      render(conn, &quot;login.html&quot;, changeset: changeset)
+      render(conn, &quot;new.html&quot;, changeset: changeset)
   end
 end</code></pre>
-<p><code class="inline">AuthController.logout</code> logs you out using <code class="inline">Auth.put_current_user/2</code>.</p>
+<p><code class="inline">sessionController.delete</code> logs you out using <a href="Authsense.Plug.html#put_current_user/2"><code class="inline">Authsense.Plug.put_current_user/2</code></a>.</p>
 <pre><code class="elixir">def logout(conn, _params) do
   conn
-  |&gt; Auth.put_current_user(nil)
+  |&gt; Authsense.Plug.put_current_user(nil)
   |&gt; put_flash(:info, &quot;You&#39;ve been logged out.&quot;)
   |&gt; redirect(to: &quot;/&quot;)
 end</code></pre>
 <h2 id="register-sign-up"> Register/sign up</h2><p>This is just a simple <code class="inline">create</code> action for users.</p>
-<h2 id="secure-pages"> Secure pages</h2><p>To make certain pages, you can implement your own <code class="inline">ensure_authenticated</code> helper.</p>
-<pre><code class="elixir">defmodule Myapp.Auth do
-  import Phoenix.Controller, only: [put_flash: 3, redirect: 2]
-
-  def ensure_authenticated(conn, _opts) do
-    if Map.get(conn.assigns, :current_user) do
-      conn
-    else
-      conn
-      |&gt; put_flash(:error, &quot;You have to be logged in to do that.&quot;)
-      |&gt; redirect(to: &quot;/&quot;)
-    end
-  end
-end</code></pre>
-<p>Use it as a plug after using <code class="inline">Auth</code>.</p>
-<pre><code class="elixir">defmodule Myapp.MyController do
-  import Auth
-
-  plug :fetch_current_user
-  plug :ensure_authenticated
-end</code></pre>
-<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <code class="inline">Auth.fetch_current_user/2</code> to
+<h2 id="secure-pages"> Secure pages</h2><p><em>(To be documented)</em></p>
+<h2 id="token-based-authentication"> Token-based authentication</h2><p>You can implement your own version of <a href="Authsense.Plug.html#fetch_current_user/2"><code class="inline">Authsense.Plug.fetch_current_user/2</code></a> to
 authenticate based on something else other than passwords.</p>
 <pre><code class="elixir">def authenticate_by_token(conn, _opts \\ []) do
   token = conn.params.token
@@ -148,9 +129,7 @@ end</code></pre>
 <pre><code class="elixir"># web/router.ex
 pipeline :api do
   plug :authenticate_by_token
-end
-
-# add `import Auth` to your web/web.ex</code></pre>
+end</code></pre>
 <h2 id="forgot-your-password"> Forgot your password</h2><p>You’ll need to create 4 actions: one for the “forgot your password” page, one
 for the “reset your password” page, and one submission action for each of those.</p>
 <p>You’ll also need a <code class="inline">:perishable_token</code> in your User model.</p>
