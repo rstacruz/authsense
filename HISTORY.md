@@ -31,6 +31,9 @@ end
 # </DEPRECATED>
 ```
 
+Special thanks to [@victorsolis] for all the guidance that went into this release.
+
+[@victorsolis]: https://github.com/victorsolis
 [v0.2.0]: https://github.com/rstacruz/authsense/compare/v0.1.0...v0.2.0
 
 ## [v0.1.0]
