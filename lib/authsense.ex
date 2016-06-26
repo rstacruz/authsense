@@ -74,16 +74,7 @@ defmodule Authsense do
   """
 
   if Application.get_all_env(:authsense) == [] do
-    raise """
-    Please configure Authsense.
-
-    Example configuration:
-      config :authsense, MyApp.User,
-        repo: MyApp.Repo
-        identity_field: :email,
-        password_field: :password,
-        hashed_password_field: :hashed_password,
-    """
+    raise Authsense.UnconfiguredException
   end
 
   @doc false
@@ -96,15 +87,6 @@ defmodule Authsense do
     repo: nil,
     model: nil
   }
-
-  @doc """
-  _Internal:_ Retrieves default configuration.
-
-  See `config/1` for more info.
-  """
-  def config do
-    config(nil)
-  end
 
   @doc """
   _Internal:_ Retrieves configuration for a given model.
@@ -148,36 +130,38 @@ defmodule Authsense do
       %{ model: Example.User, ... foo: :bar }
 
   """
+  def config(opts \\ nil)
+  def config([]), do: config(nil)
   def config(nil) do
-    [ conf | _ ] = all_env
-    { model, conf } = conf
-    conf
-    |> Enum.into(%{ model: model })
+    cond do
+      length(all_config) > 1 ->
+        raise Authsense.MultipleResourcesException
+
+      all_config == [] -> # Runtime guard
+        raise Authsense.UnconfiguredException
+
+      true ->
+        [{model, _opts}] = all_config
+        merge_with_defaults(all_config, model)
+    end
+  end
+
+  def config(opts) when is_list(opts),
+    do: Enum.into(opts, merge_with_defaults(all_config, opts[:model]))
+
+  def config(model) when is_atom(model),
+    do: merge_with_defaults(all_config, model)
+
+  defp all_config, do: Application.get_all_env(:authsense)
+
+  # Runtime guard
+  defp merge_with_defaults(_opts, nil),
+    do: raise Authsense.UnconfiguredException
+
+  defp merge_with_defaults(opts, model) do
+    opts
+    |> Keyword.get(model, [])
+    |> Enum.into(%{model: model})
     |> Enum.into(@defaults)
-  end
-
-  def config([]) do
-    config(nil)
-  end
-
-  def config(opts) when is_list(opts) do
-    model = opts[:model]
-
-    conf =
-    (Keyword.get(all_env, model) || [])
-      |> Enum.into(%{ model: model })
-      |> Enum.into(@defaults)
-
-    Enum.into(opts, conf)
-  end
-
-  def config(model) do
-    (Keyword.get(all_env, model) || [])
-    |> Enum.into(%{ model: model })
-    |> Enum.into(@defaults)
-  end
-
-  defp all_env do
-    Application.get_all_env(:authsense)
   end
 end
