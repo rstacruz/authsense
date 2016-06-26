@@ -73,6 +73,19 @@ defmodule Authsense do
   things: see [Recipes](recipes.html).
   """
 
+  if Application.get_all_env(:authsense) == [] do
+    raise """
+    Please configure Authsense.
+
+    Example configuration:
+      config :authsense, MyApp.User,
+        repo: MyApp.Repo
+        identity_field: :email,
+        password_field: :password,
+        hashed_password_field: :hashed_password,
+    """
+  end
+
   @doc false
   @defaults %{
     crypto: Comeonin.Pbkdf2,
@@ -164,13 +177,7 @@ defmodule Authsense do
     |> Enum.into(@defaults)
   end
 
-  # Returns configuration concerning :authsense; strips away any configuration
-  # that doesn't fit.
   defp all_env do
     Application.get_all_env(:authsense)
-    |> Enum.filter(fn
-       {_model, [_] = list} -> Keyword.has_key?(list, :repo)
-       _ -> false
-    end)
   end
 end

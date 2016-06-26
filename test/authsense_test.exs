@@ -13,9 +13,15 @@ defmodule AuthsenseTest do
     assert config.identity_field == :email
   end
 
-  test "accepts models" do
+  test "overrides defaults" do
     config = Authsense.config(Authsense.Test.User)
-    assert config.model == Authsense.Test.User
+    assert config.password_field == :custom_field
+  end
+
+  test "accepts models" do
+    config = Authsense.config(AnotherModule)
+    assert config.model == AnotherModule
+    assert config.password_field == :password
   end
 
   test "works even if config for model isn't set" do
@@ -25,8 +31,8 @@ defmodule AuthsenseTest do
   end
 
   test "accepts lists" do
-    config = Authsense.config(model: Authsense.Test.User, foo: :bar)
-    assert config.model == Authsense.Test.User
+    config = Authsense.config(model: AnotherModule, foo: :bar)
+    assert config.model == AnotherModule
     assert config.foo == :bar
   end
 
