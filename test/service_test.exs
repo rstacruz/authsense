@@ -7,7 +7,9 @@ defmodule AuthsenseServiceTest do
   import Ecto.Changeset, only: [change: 2]
 
   setup do
-    Repo.delete_all(User)
+    Application.delete_env :authsense, :included_applications
+    Repo.start_link
+
     :ok
   end
 
@@ -15,41 +17,37 @@ defmodule AuthsenseServiceTest do
     %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
     |> Service.generate_hashed_password()
-    |> Repo.insert!
-  end
-
-  def get_user do
-    Repo.get_by(User, email: "rico@gmail.com")
+    |> Repo.insert
   end
 
   test "generate_hashed_password success" do
-    add_user
+    changeset =
+      %User{}
+      |> change(%{email: "rico@gmail.com", password: "foobar"})
+      |> Service.generate_hashed_password()
 
-    user = Repo.get_by(User, email: "rico@gmail.com")
-    assert user.hashed_password |> String.starts_with?("$pbkdf2-sha512$")
+    assert changeset.changes.hashed_password
+      |> String.starts_with?("$pbkdf2-sha512$")
   end
 
   test "generate_hashed_password failure" do
-    %User{}
-    |> change(%{email: "rico@gmail.com"})
-    |> Service.generate_hashed_password()
-    |> Repo.insert!
+    changeset =
+      %User{}
+      |> change(%{email: "rico@gmail.com"})
+      |> Service.generate_hashed_password()
 
-    user = Repo.get_by(User, email: "rico@gmail.com")
-    assert user.hashed_password == nil
+    refute Map.has_key? changeset.changes, :hashed_password
   end
 
   test "authenticate via changeset" do
     add_user
 
-    assert {:ok, get_user} == %User{}
+    assert {:ok, _user} = %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
     |> Service.authenticate()
   end
 
   test "authenticate via changeset failure" do
-    add_user
-
     {:error, changeset} = %User{}
     |> change(%{email: "rico@gmail.com", password: "nope"})
     |> Service.authenticate()
@@ -58,14 +56,12 @@ defmodule AuthsenseServiceTest do
   end
 
   test "authenticate via password" do
-    add_user
-
     assert {:error, nil} == Service.authenticate({"rico@gmail.com", "nope"})
   end
 
   test "get_user" do
     add_user
-    assert Service.get_user("rico@gmail.com") == get_user
+    assert Service.get_user("rico@gmail.com").email == "rico@gmail.com"
   end
 
   test "get_user failure" do

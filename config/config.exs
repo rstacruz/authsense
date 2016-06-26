@@ -2,4 +2,4 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-if Mix.env == :test, do: import_config "test.exs"
+import_config "#{Mix.env}.exs"

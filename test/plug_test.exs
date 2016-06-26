@@ -1,23 +1,15 @@
 defmodule PlugTest do
   use ExUnit.Case, async: true
   use Plug.Test
-  import Ecto.Changeset, only: [change: 2]
 
   alias Authsense.Test.Repo
   alias Authsense.Test.User
   alias Authsense.Test.ProcessStore
-  alias Authsense.Service
 
   setup do
-    Repo.delete_all(User)
+    Application.delete_env :authsense, :included_applications
+    Repo.start_link
     :ok
-  end
-
-  defp add_user do
-    %User{}
-    |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Service.generate_hashed_password()
-    |> Repo.insert!
   end
 
   # Enables sessions in a conn
@@ -29,13 +21,13 @@ defmodule PlugTest do
   end
 
   test "put_current_user(user)" do
-    user = add_user
+    user = %User{id: 1}
     conn = conn(:get, "/")
     |> sign_conn()
     |> Authsense.Plug.put_current_user(user)
 
     assert conn.assigns.current_user == user
-    assert get_session(conn, :current_user_id) == user.id
+    assert get_session(conn, :current_user_id) == 1
   end
 
   test "put_current_user(nil)" do
@@ -48,7 +40,7 @@ defmodule PlugTest do
   end
 
   test "fetch_current_user" do
-    user = add_user
+    user = Repo.insert(%User{id: 1})
     conn = conn(:get, "/")
     |> sign_conn()
     |> put_session(:current_user_id, user.id)
@@ -59,7 +51,6 @@ defmodule PlugTest do
   end
 
   test "fetch_current_user (nonexistent)" do
-    user = add_user
     conn = conn(:get, "/")
     |> sign_conn()
     |> put_session(:current_user_id, 31337) # presumably non-existent
