@@ -1,3 +1,13 @@
+## [v0.3.0]
+> Jun 27, 2016
+
+- [#2] - Shows errors when multiple resources are configured (`MultipleResourcesException`). ([@victorsolis])
+- [#2] - Shows errors in compile time when Authsense isn't configured (`UnconfiguredException`). ([@victorsolis])
+- [#2] - General refactoring to improve configuration management. ([@victorsolis])
+
+[v0.3.0]: https://github.com/rstacruz/authsense/compare/v0.2.0...v0.3.0
+[#2]: https://github.com/rstacruz/authsense/issues/2
+
 ## [v0.2.0]
 > Jun 25, 2016
 
@@ -42,4 +52,3 @@ Special thanks to [@victorsolis] for all the guidance that went into this releas
 - Initial release.
 
 [v0.1.0]: https://github.com/rstacruz/authsense/tree/v0.1.0
-
