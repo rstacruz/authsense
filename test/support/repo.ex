@@ -1,26 +1,21 @@
 defmodule Authsense.Test.Repo do
-  def start_link do
-    Agent.start_link fn -> [] end, name: :test_repo
+  alias Authsense.Test.User
+
+  def get(_model, 1) do
+    valid_resource "rico@gmail.com", "foobar"
+  end
+  def get(_model, _id), do: nil
+
+  def get_by(_model, email: "nobody@gmail.com"), do: nil
+  def get_by(_model, email: "rico@gmail.com") do
+    valid_resource "rico@gmail.com", "foobar"
   end
 
-  def insert(%Ecto.Changeset{} = changeset) do
-    insert changeset.changes
+  defp valid_resource(email, password) do
+    %User{id: 1, email: email, hashed_password: crypto.hashpwsalt(password)}
   end
 
-  def insert(resource) do
-    Agent.update :test_repo, fn state -> [resource|state] end
-    resource
-  end
-
-  def get(_model, id) do
-    Agent.get :test_repo, fn state ->
-      Enum.find(state, &(&1.id == id))
-    end
-  end
-
-  def get_by(_model, email: email) do
-    Agent.get :test_repo, fn state ->
-      Enum.find(state, &(&1.email == email))
-    end
+  defp crypto do
+    Authsense.config.crypto
   end
 end

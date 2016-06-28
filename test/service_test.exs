@@ -1,23 +1,13 @@
 defmodule AuthsenseServiceTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Authsense.Service
-  alias Authsense.Test.Repo
   alias Authsense.Test.User
   alias Authsense.Service
   import Ecto.Changeset, only: [change: 2]
 
   setup do
     Application.delete_env :authsense, :included_applications
-    Repo.start_link
-
     :ok
-  end
-
-  def add_user do
-    %User{}
-    |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Service.generate_hashed_password()
-    |> Repo.insert
   end
 
   test "generate_hashed_password success" do
@@ -40,8 +30,6 @@ defmodule AuthsenseServiceTest do
   end
 
   test "authenticate via changeset" do
-    add_user
-
     assert {:ok, _user} = %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
     |> Service.authenticate()
@@ -60,7 +48,6 @@ defmodule AuthsenseServiceTest do
   end
 
   test "get_user" do
-    add_user
     assert Service.get_user("rico@gmail.com").email == "rico@gmail.com"
   end
 

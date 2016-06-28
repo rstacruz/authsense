@@ -2,13 +2,11 @@ defmodule PlugTest do
   use ExUnit.Case, async: true
   use Plug.Test
 
-  alias Authsense.Test.Repo
   alias Authsense.Test.User
   alias Authsense.Test.ProcessStore
 
   setup do
     Application.delete_env :authsense, :included_applications
-    Repo.start_link
     :ok
   end
 
@@ -40,14 +38,14 @@ defmodule PlugTest do
   end
 
   test "fetch_current_user" do
-    user = Repo.insert(%User{id: 1})
+    user = %User{id: 1}
     conn = conn(:get, "/")
     |> sign_conn()
     |> put_session(:current_user_id, user.id)
     |> Authsense.Plug.fetch_current_user()
 
     assert get_session(conn, :current_user_id) == user.id
-    assert conn.assigns.current_user == user
+    assert conn.assigns.current_user.id == user.id
   end
 
   test "fetch_current_user (nonexistent)" do
