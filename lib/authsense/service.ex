@@ -58,21 +58,22 @@ defmodule Authsense.Service do
       authenticate_user(changeset)
       authenticate_user({ email, password })
   """
-  def authenticate_user(changeset_or_tuple, model \\ nil)
-  def authenticate_user(%Changeset{} = changeset, model) do
+  def authenticate_user(changeset_or_tuple, model \\ nil, map_or_tuple_array \\ %{})
+  def authenticate_user(%Changeset{} = changeset, model, filter_conditions) do
     %{identity_field: id, password_field: passwd} =
       Authsense.config(model)
 
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
-    authenticate_user({email, password}, model)
+    authenticate_user({email, password}, model, filter_conditions)
   end
 
-  def authenticate_user({email, password}, model) do
+  def authenticate_user({email, password}, model, filter_conditions) do
     %{crypto: crypto, hashed_password_field: hashed_passwd} =
       Authsense.config(model)
+    extra_filters = get_extra_filters(filter_conditions)
 
-    user = get_user(email, model)
+    user = get_user(email, model, extra_filters)
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -85,11 +86,11 @@ defmodule Authsense.Service do
 
       get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, model \\ nil) do
+  def get_user(email, model \\ nil, extra_filters \\ []) do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(model)
 
-    repo.get_by(model, [{id, email}])
+    repo.get_by(model, [{id, email}] ++ extra_filters)
   end
 
   @doc """
@@ -127,6 +128,9 @@ defmodule Authsense.Service do
         |> put_change(hashed_passwd, crypto.hashpwsalt(password))
     end
   end
+
+  defp get_extra_filters(filters) when is_map(filters), do: tl(Enum.into(filters, [{}]))
+  defp get_extra_filters(filters) filters
 
   # Adds errors to a changeset.
   # Used by `authenticate/2`.
