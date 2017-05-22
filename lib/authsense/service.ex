@@ -21,6 +21,12 @@ defmodule Authsense.Service do
       # Tuple:
       authenticate({ "rico@gmail.com", "password" })
 
+  Extending a filter with authentication is also possible as long as the field exists
+
+      %User{}
+      |> change(%{ email: "rico@gmail.com", password: "password" })
+      |> authenticate(User, %{extra_field: "value"})
+
   Returns `{:ok, user}` on success, or `{:error, changeset}` on failure. If
   used as a tuple, it returns `{:error, nil}` on failure.
 
