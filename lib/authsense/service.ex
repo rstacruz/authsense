@@ -41,9 +41,9 @@ defmodule Authsense.Service do
         end
       end
   """
-  def authenticate(changeset_or_tuple, model \\ nil)
-  def authenticate(credentials, model) do
-    case authenticate_user(credentials, model) do
+  def authenticate(changeset_or_tuple, model \\ nil, opts \\ [])
+  def authenticate(credentials, model, opts) do
+    case authenticate_user(credentials, model, opts) do
       false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
@@ -58,10 +58,11 @@ defmodule Authsense.Service do
       authenticate_user(changeset)
       authenticate_user({ email, password })
   """
-  def authenticate_user(changeset_or_tuple, model \\ nil)
-  def authenticate_user(%Changeset{} = changeset, model) do
+  def authenticate_user(changeset_or_tuple, model \\ nil, opts \\ [])
+  def authenticate_user(%Changeset{} = changeset, model, opts) do
     %{identity_field: id, password_field: passwd} =
       Authsense.config(model)
+    model = get_scope(Keyword.get(opts, :scope) || nil)
 
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
@@ -139,4 +140,7 @@ defmodule Authsense.Service do
   end
 
   defp auth_failure(_opts, _), do: nil
+
+  defp get_scope([scope: scope]) when is_function(scope), do: scope.()
+  defp get_scope(_scope), do: nil
 end
