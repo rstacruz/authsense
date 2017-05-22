@@ -54,4 +54,14 @@ defmodule AuthsenseServiceTest do
   test "get_user failure" do
     assert Service.get_user("nobody@gmail.com") == nil
   end
+
+    test "authenticate with extra filters" do
+      assert {:ok, _user} = %User{}
+      |> change(%{email: "jekku@gmail.com", password: "barfoo"})
+      |> Service.authenticate(nil, %{extra_field: "newbie"})
+
+      assert {:error, _error} = %User{}
+      |> change(%{email: "jekku@gmail.com", password: "barfoo"})
+      |> Service.authenticate(nil, %{extra_field: "unicorn"})
+    end
 end

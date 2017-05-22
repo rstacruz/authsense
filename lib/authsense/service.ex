@@ -41,9 +41,9 @@ defmodule Authsense.Service do
         end
       end
   """
-  def authenticate(changeset_or_tuple, model \\ nil)
-  def authenticate(credentials, model) do
-    case authenticate_user(credentials, model) do
+  def authenticate(changeset_or_tuple, model \\ nil, map_or_tuple_array \\ %{})
+  def authenticate(credentials, model, extra_filters) do
+    case authenticate_user(credentials, model, extra_filters) do
       false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
@@ -89,7 +89,6 @@ defmodule Authsense.Service do
   def get_user(email, model \\ nil, extra_filters \\ []) do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(model)
-
     repo.get_by(model, [{id, email}] ++ extra_filters)
   end
 
