@@ -130,7 +130,7 @@ defmodule Authsense.Service do
   end
 
   defp get_extra_filters(filters) when is_map(filters), do: tl(Enum.into(filters, [{}]))
-  defp get_extra_filters(filters) filters
+  defp get_extra_filters(filters), do: filters
 
   # Adds errors to a changeset.
   # Used by `authenticate/2`.
