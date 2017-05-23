@@ -3,6 +3,7 @@ defmodule Authsense.Test.User do
   schema "" do
     field :email, :string
     field :hashed_password, :string
+    field :extra_field, :string
     timestamps
   end
 end
