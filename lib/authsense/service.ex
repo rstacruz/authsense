@@ -62,18 +62,17 @@ defmodule Authsense.Service do
   def authenticate_user(%Changeset{} = changeset, model, opts) do
     %{identity_field: id, password_field: passwd} =
       Authsense.config(model)
-    model = get_scope(Keyword.get(opts, :scope) || nil)
 
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
-    authenticate_user({email, password}, model)
+    authenticate_user({email, password}, model, opts)
   end
 
-  def authenticate_user({email, password}, model) do
+  def authenticate_user({email, password}, model, opts) do
     %{crypto: crypto, hashed_password_field: hashed_passwd} =
       Authsense.config(model)
 
-    user = get_user(email, model)
+    user = get_user(email, model, opts)
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -86,9 +85,11 @@ defmodule Authsense.Service do
 
       get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, model \\ nil) do
+  def get_user(email, model \\ nil, opts \\ []) do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(model)
+
+    model = get_scope(Keyword.get(opts, :scope) || model)
 
     repo.get_by(model, [{id, email}])
   end
