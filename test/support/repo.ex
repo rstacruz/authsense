@@ -11,6 +11,12 @@ defmodule Authsense.Test.Repo do
     valid_resource "rico@gmail.com", "foobar"
   end
 
+  def where(_model, extra_field: "unicorn") do
+    valid_resource "rico@gmail.com", "foobar"
+  end
+
+  def where(_model, extra_field: "newbie"), do: nil
+
   defp valid_resource(email, password) do
     %User{id: 1, email: email, hashed_password: crypto.hashpwsalt(password)}
   end

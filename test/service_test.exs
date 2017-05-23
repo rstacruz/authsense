@@ -2,6 +2,7 @@ defmodule AuthsenseServiceTest do
   use ExUnit.Case, async: true
   doctest Authsense.Service
   alias Authsense.Test.User
+  alias Authsense.Test.Repo
   alias Authsense.Service
   import Ecto.Changeset, only: [change: 2]
 
@@ -53,5 +54,17 @@ defmodule AuthsenseServiceTest do
 
   test "get_user failure" do
     assert Service.get_user("nobody@gmail.com") == nil
+  end
+
+  test "authenticate with extra params and retrieve correctly" do
+      assert {:ok, _user} = %User{}
+      |> change(%{email: "rico@gmail.com", password: "foobar"})
+      |> Service.authenticate(User, scope: (fn -> Repo.where(User, extra_field: "unicorn") end))
+  end
+
+  test "authenticate with extra params and retrieve nothing" do
+      assert {:ok, _user} = %User{}
+      |> change(%{email: "rico@gmail.com", password: "foobar"})
+      |> Service.authenticate(User, scope: (fn -> Repo.where(User, extra_field: "newbie") end))
   end
 end
