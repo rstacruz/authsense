@@ -49,9 +49,12 @@ defmodule Authsense.Service do
       |> change(%{ email: "rico@gmail.com", password: "password})
       |> authenticate(User, [scope: (fn () -> User |> where(:extra_field, ^somevar) end)])
   """
-  def authenticate(changeset_or_tuple, model \\ nil, opts \\ [])
-  def authenticate(credentials, model, opts) do
-    case authenticate_user(credentials, model, opts) do
+  def authenticate(changeset_or_tuple, model) when is_atom(model), do: authenticate(changeset_or_tuple, model: model)
+
+  def authenticate(changeset_or_tuple, opts \\ [])
+  def authenticate(credentials, opts) do
+    model = Keyword.get(opts, :model)
+    case authenticate_user(credentials, opts) do
       false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
@@ -66,21 +69,25 @@ defmodule Authsense.Service do
       authenticate_user(changeset)
       authenticate_user({ email, password })
   """
-  def authenticate_user(changeset_or_tuple, model \\ nil, opts \\ [])
-  def authenticate_user(%Changeset{} = changeset, model, opts) do
+
+  def authenticate_user(changeset_or_tuple, model) when is_atom(model), do: authenticate_user(model: model)
+
+  def authenticate_user(changeset_or_tuple, opts \\ [])
+  def authenticate_user(%Changeset{} = changeset, opts) do
     %{identity_field: id, password_field: passwd} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
-    authenticate_user({email, password}, model, opts)
+    authenticate_user({email, password}, opts)
   end
 
-  def authenticate_user({email, password}, model, opts) do
+  def authenticate_user({email, password}, opts) do
     %{crypto: crypto, hashed_password_field: hashed_passwd} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
-    user = get_user(email, model, opts)
+    user = get_user(email, opts)
+
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -93,9 +100,10 @@ defmodule Authsense.Service do
 
       get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, model \\ nil, opts \\ []) do
+  def get_user(email, opts \\ []) do
+    model = Keyword.get(opts, :model)
     %{repo: repo, model: model, identity_field: id} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
     model = get_scope(Keyword.get(opts, :scope) || model)
 

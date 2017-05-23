@@ -56,15 +56,15 @@ defmodule AuthsenseServiceTest do
     assert Service.get_user("nobody@gmail.com") == nil
   end
 
-  test "authenticate with extra params and retrieve correctly" do
+  test "authenticate with opts and retrieve correctly" do
       assert {:ok, _user} = %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(User, scope: (fn -> Repo.where(User, extra_field: "unicorn") end))
+      |> Service.authenticate(scope: (fn -> Repo.where(User, extra_field: "unicorn") end))
   end
 
-  test "authenticate with extra params and retrieve nothing" do
+  test "authenticate with opts and retrieve nothing" do
       assert {:error, _error} = %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(User, scope: (fn -> Repo.where(User, extra_field: "newbie") end))
+      |> Service.authenticate(scope: (fn -> Repo.where(User, extra_field: "newbie") end))
   end
 end
