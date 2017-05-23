@@ -142,6 +142,6 @@ defmodule Authsense.Service do
 
   defp auth_failure(_opts, _), do: nil
 
-  defp get_scope([scope: scope]) when is_function(scope), do: scope.()
+  defp get_scope(scope) when is_function(scope), do: scope.()
   defp get_scope(_scope), do: nil
 end

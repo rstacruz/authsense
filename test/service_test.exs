@@ -63,7 +63,7 @@ defmodule AuthsenseServiceTest do
   end
 
   test "authenticate with extra params and retrieve nothing" do
-      assert {:error, nil} = %User{}
+      assert {:error, _error} = %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
       |> Service.authenticate(User, scope: (fn -> Repo.where(User, extra_field: "newbie") end))
   end
