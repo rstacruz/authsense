@@ -6,11 +6,10 @@ defmodule Authsense.Test.Repo do
   end
   def get(_model, _id), do: nil
 
-  def get_by(model, email: email), do: Enum.find(model || mock_data(), &(&1.email == email))
+  def get_by(model, email: email) when is_atom(model), do: Enum.find(all(), &(&1.email == email))
+  def get_by(model, email: email), do: Enum.find(model, &(&1.email == email))
 
-  def where(_model, extra_field: extra_field), do: Enum.filter(mock_data(), &(&1.extra_field == extra_field))
-
-  defp mock_data do
+  def all do
     [
       %User{id: 1, email: "rico@gmail.com", hashed_password: crypto.hashpwsalt("foobar"), extra_field: "unicorn"},
       %User{id: 2, email: "jekku@gmail.com", hashed_password: crypto.hashpwsalt("foobar"), extra_field: "newbie"}
