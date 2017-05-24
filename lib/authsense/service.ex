@@ -105,7 +105,7 @@ defmodule Authsense.Service do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(Keyword.get(opts, :model))
 
-    model = get_scope(Keyword.get(opts, :scope) || model)
+    model = get_scope(Keyword.get(opts, :scope)) || model
 
     repo.get_by(model, [{id, email}])
   end
