@@ -19,13 +19,6 @@ defmodule Authsense.Test.Repo do
   def get_by(_model, email: "rico@gmail.com"), do: valid_resource "rico@gmail.com", "foobar"
   def get_by(_model, _email), do: nil
 
-  def all do
-    [
-      %User{id: 1, email: "rico@gmail.com", hashed_password: crypto.hashpwsalt("foobar"), extra_field: "unicorn"},
-      %User{id: 2, email: "jekku@gmail.com", hashed_password: crypto.hashpwsalt("foobar"), extra_field: "newbie"}
-    ]
-  end
-
   defp valid_resource(email, password) do
     %User{id: 1, email: email, hashed_password: crypto.hashpwsalt(password)}
   end
