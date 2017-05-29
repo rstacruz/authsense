@@ -6,8 +6,18 @@ defmodule Authsense.Test.Repo do
   end
   def get(_model, _id), do: nil
 
-  def get_by(model, email: email) when is_atom(model), do: Enum.find(all(), &(&1.email == email))
-  def get_by(model, email: email), do: Enum.find(model, &(&1.email == email))
+  def get_by(query = %Ecto.Query{}, email: "rico@gmail.com") do
+    [%Ecto.Query.QueryExpr{expr: expression}] = query.wheres
+    { _, _, [ _, %Ecto.Query.Tagged{value: value} ] } = expression
+
+    case value do
+      "newbie" -> nil
+      "unicorn" -> valid_resource "rico@gmail.com", "foobar"
+    end
+  end
+
+  def get_by(_model, email: "rico@gmail.com"), do: valid_resource "rico@gmail.com", "foobar"
+  def get_by(_model, _email), do: nil
 
   def all do
     [
