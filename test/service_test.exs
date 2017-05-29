@@ -2,10 +2,9 @@ defmodule AuthsenseServiceTest do
   use ExUnit.Case, async: true
   doctest Authsense.Service
   alias Authsense.Test.User
-  alias Authsense.Test.Query
-  alias Authsense.Test.Repo
   alias Authsense.Service
   import Ecto.Changeset, only: [change: 2]
+  import Ecto.Query
 
   setup do
     Application.delete_env :authsense, :included_applications
@@ -58,14 +57,18 @@ defmodule AuthsenseServiceTest do
   end
 
   test "authenticate with opts and retrieve correctly" do
+      unicorns = from u in User, where: u.extra_field == "unicorn"
+
       assert {:ok, _user} = %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: (fn -> Query.where(User, extra_field: "unicorn") end))
+      |> Service.authenticate(scope: unicorns)
   end
 
   test "authenticate with opts and retrieve nothing" do
+      noobs = from u in User, where: u.extra_field == "newbie"
+
       assert {:error, _error} = %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: (fn -> Query.where(User, extra_field: "newbie") end))
+      |> Service.authenticate(scope: noobs)
   end
 end

@@ -49,9 +49,9 @@ defmodule Authsense.Service do
       |> change(%{ email: "rico@gmail.com", password: "password})
       |> authenticate([scope: (fn () -> User |> where(:extra_field, ^somevar) end)])
   """
-  def authenticate(changeset_or_tuple, model) when is_atom(model), do: authenticate(changeset_or_tuple, model: model)
 
   def authenticate(changeset_or_tuple, opts \\ [])
+  def authenticate(changeset_or_tuple, model) when is_atom(model), do: authenticate(changeset_or_tuple, model: model)
   def authenticate(credentials, opts) do
     model = Keyword.get(opts, :model)
     case authenticate_user(credentials, opts) do
@@ -70,9 +70,8 @@ defmodule Authsense.Service do
       authenticate_user({ email, password })
   """
 
-  def authenticate_user(changeset_or_tuple, model) when is_atom(model), do: authenticate_user(model: model)
-
   def authenticate_user(changeset_or_tuple, opts \\ [])
+  def authenticate_user(changeset_or_tuple, model) when is_atom(model), do: authenticate_user(changeset_or_tuple, model: model)
   def authenticate_user(%Changeset{} = changeset, opts) do
     %{identity_field: id, password_field: passwd} =
       Authsense.config(Keyword.get(opts, :model))
@@ -159,5 +158,5 @@ defmodule Authsense.Service do
   defp auth_failure(_opts, _), do: nil
 
   defp get_scope(scope) when is_function(scope), do: scope.()
-  defp get_scope(_scope), do: nil
+  defp get_scope(scope), do: scope
 end
