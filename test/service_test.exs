@@ -56,19 +56,41 @@ defmodule AuthsenseServiceTest do
     assert Service.get_user("nobody@gmail.com") == nil
   end
 
-  test "authenticate with opts and retrieve correctly" do
-      unicorns = from u in User, where: u.extra_field == "unicorn"
+  test "authenticate with Ecto.Queryable scope and retrieve correctly" do
+    unicorns = from u in User, where: u.extra_field == "unicorn"
 
-      assert {:ok, _user} = %User{}
-      |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: unicorns)
+    assert {:ok, _user} = %User{}
+    |> change(%{email: "rico@gmail.com", password: "foobar"})
+    |> Service.authenticate(scope: unicorns)
   end
 
-  test "authenticate with opts and retrieve nothing" do
-      noobs = from u in User, where: u.extra_field == "newbie"
+  test "authenticate non Ecto.Queryable or lambda scope" do
+    invalid_scope = "Not a valid scope"
 
-      assert {:error, _error} = %User{}
+    assert_raise Authsense.InvalidScopeException, fn ->
+      %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: noobs)
+      |> Service.authenticate(scope: invalid_scope)
+    end
+  end
+
+  test "authenticate with lambda scope that returns Ecto.Queryable and retrieve correctly" do
+    get_unicorns_query = fn ->
+      from u in User, where: u.extra_field == "unicorn"
+    end
+
+    assert {:ok, _user} = %User{}
+    |> change(%{email: "rico@gmail.com", password: "foobar"})
+    |> Service.authenticate(scope: get_unicorns_query)
+  end
+
+  test "authenticate with invalid lambda scope" do
+    invalid_lambda = fn -> "Not an Ecto Query return value" end
+
+    assert_raise Authsense.InvalidScopeException, fn ->
+      %User{}
+      |> change(%{email: "rico@gmail.com", password: "foobar"})
+      |> Service.authenticate(scope: invalid_lambda)
+    end
   end
 end

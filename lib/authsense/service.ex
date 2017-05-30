@@ -99,12 +99,21 @@ defmodule Authsense.Service do
 
       get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, opts \\ []) do
-    model = Keyword.get(opts, :model)
+
+  def get_user(email, opts \\ [])
+  def get_user(email, [scope: scope]) do
+    %{repo: repo, identity_field: id} = Authsense.config(nil)
+
+    model = case validate_scope(scope) do
+      {:ok, final_model} -> final_model
+      {:error, error} -> raise Authsense.InvalidScopeException, error
+    end
+
+    repo.get_by(model, [{id, email}])
+  end
+  def get_user(email, opts) do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(Keyword.get(opts, :model))
-
-    model = get_scope(Keyword.get(opts, :scope)) || model
 
     repo.get_by(model, [{id, email}])
   end
@@ -157,6 +166,14 @@ defmodule Authsense.Service do
 
   defp auth_failure(_opts, _), do: nil
 
-  defp get_scope(scope) when is_function(scope), do: scope.()
-  defp get_scope(scope), do: scope
+  defp validate_scope(scope) when is_function(scope) do
+    final_model = scope.()
+    case final_model do
+      %Ecto.Query{} -> {:ok, final_model}
+      _ -> {:error, "The scope lambda's return value should be of type Ecto.Query"}
+    end
+  end
+
+  defp validate_scope(%Ecto.Query{} = scope), do: {:ok, scope}
+  defp validate_scope(_scope), do: {:error, "The scope should be of type Ecto.Query"}
 end

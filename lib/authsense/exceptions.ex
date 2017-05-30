@@ -49,3 +49,23 @@ defmodule Authsense.MultipleResourcesException do
     %Authsense.MultipleResourcesException{message: message}
   end
 end
+
+defmodule Authsense.InvalidScopeException do
+  @moduledoc """
+  Raised when passed scope to `Authsense.Service.authenticate/2`,
+  `Authsense.Service.authenticate_user/2`, and `Authsense.Service.get_user/2`
+  is either a lambda that does not return an `Ecto.Query`,
+  or is not convertible to `Ecto.Query`
+  """
+
+  defexception [:message]
+
+  def exception(message) do
+    message = """
+    Passed scope is of invalid type
+
+      #{message}
+    """
+    %Authsense.InvalidScopeException{message: message}
+  end
+end
