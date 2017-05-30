@@ -61,7 +61,7 @@ defmodule AuthsenseServiceTest do
 
     assert {:ok, _user} = %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Service.authenticate(scope: unicorns)
+    |> Service.authenticate(scope: unicorns, model: User)
   end
 
   test "authenticate non Ecto.Queryable or lambda scope" do
@@ -70,7 +70,7 @@ defmodule AuthsenseServiceTest do
     assert_raise Authsense.InvalidScopeException, fn ->
       %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: invalid_scope)
+      |> Service.authenticate(scope: invalid_scope, model: User)
     end
   end
 
@@ -81,7 +81,7 @@ defmodule AuthsenseServiceTest do
 
     assert {:ok, _user} = %User{}
     |> change(%{email: "rico@gmail.com", password: "foobar"})
-    |> Service.authenticate(scope: get_unicorns_query)
+    |> Service.authenticate(scope: get_unicorns_query, model: User)
   end
 
   test "authenticate with invalid lambda scope" do
@@ -90,7 +90,7 @@ defmodule AuthsenseServiceTest do
     assert_raise Authsense.InvalidScopeException, fn ->
       %User{}
       |> change(%{email: "rico@gmail.com", password: "foobar"})
-      |> Service.authenticate(scope: invalid_lambda)
+      |> Service.authenticate(scope: invalid_lambda, model: User)
     end
   end
 end

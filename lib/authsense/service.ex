@@ -101,16 +101,17 @@ defmodule Authsense.Service do
   """
 
   def get_user(email, opts \\ [])
-  def get_user(email, [scope: scope]) do
-    %{repo: repo, identity_field: id} = Authsense.config(nil)
+  def get_user(email, [scope: scope, model: model]) do
+    %{repo: repo, identity_field: id} = Authsense.config(model)
 
-    model = case validate_scope(scope) do
+    scoped_model = case validate_scope(scope) do
       {:ok, final_model} -> final_model
       {:error, error} -> raise Authsense.InvalidScopeException, error
     end
 
-    repo.get_by(model, [{id, email}])
+    repo.get_by(scoped_model, [{id, email}])
   end
+
   def get_user(email, opts) do
     %{repo: repo, model: model, identity_field: id} =
       Authsense.config(Keyword.get(opts, :model))
