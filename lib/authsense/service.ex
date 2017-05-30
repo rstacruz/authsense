@@ -42,12 +42,12 @@ defmodule Authsense.Service do
       end
 
   It's also possible to add opts as a second parameter, which may contain a keyword scope.
-  Scope must always be a function that returns an `Ecto.Queryable`.
+  Scope can be lambda that returns an `Ecto.Queryable`, an `Ecto.Query`, or an `Ecto.Queryable`
   This will override the model with a prepared queryable.
 
       %User
       |> change(%{ email: "rico@gmail.com", password: "password})
-      |> authenticate([scope: (fn () -> User |> where(:extra_field, ^somevar) end)])
+      |> authenticate([scope: User |> where(:field_for_filtering, ^somevar))
   """
 
   def authenticate(changeset_or_tuple, opts \\ [])
