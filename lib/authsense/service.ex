@@ -40,10 +40,21 @@ defmodule Authsense.Service do
             render(conn, "login.html", changeset: changeset)
         end
       end
+
+  It's also possible to add opts as a second parameter, which may contain a keyword scope.
+  Scope can be lambda that returns an `Ecto.Queryable`, an `Ecto.Query`, or an `Ecto.Queryable`
+  This will override the model with a prepared queryable.
+
+      %User
+      |> change(%{ email: "rico@gmail.com", password: "password})
+      |> authenticate([scope: User |> where(:field_for_filtering, ^somevar))
   """
-  def authenticate(changeset_or_tuple, model \\ nil)
-  def authenticate(credentials, model) do
-    case authenticate_user(credentials, model) do
+
+  def authenticate(changeset_or_tuple, opts \\ [])
+  def authenticate(changeset_or_tuple, model) when is_atom(model), do: authenticate(changeset_or_tuple, model: model)
+  def authenticate(credentials, opts) do
+    model = Keyword.get(opts, :model)
+    case authenticate_user(credentials, opts) do
       false -> {:error, auth_failure(credentials, model)}
       user -> {:ok, user}
     end
@@ -58,21 +69,24 @@ defmodule Authsense.Service do
       authenticate_user(changeset)
       authenticate_user({ email, password })
   """
-  def authenticate_user(changeset_or_tuple, model \\ nil)
-  def authenticate_user(%Changeset{} = changeset, model) do
+
+  def authenticate_user(changeset_or_tuple, opts \\ [])
+  def authenticate_user(changeset_or_tuple, model) when is_atom(model), do: authenticate_user(changeset_or_tuple, model: model)
+  def authenticate_user(%Changeset{} = changeset, opts) do
     %{identity_field: id, password_field: passwd} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
     email = get_change(changeset, id)
     password = get_change(changeset, passwd)
-    authenticate_user({email, password}, model)
+    authenticate_user({email, password}, opts)
   end
 
-  def authenticate_user({email, password}, model) do
+  def authenticate_user({email, password}, opts) do
     %{crypto: crypto, hashed_password_field: hashed_passwd} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
-    user = get_user(email, model)
+    user = get_user(email, opts)
+
     if user do
       crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
     else
@@ -85,9 +99,22 @@ defmodule Authsense.Service do
 
       get_user("rico@gmail.com")  #=> %User{...}
   """
-  def get_user(email, model \\ nil) do
+
+  def get_user(email, opts \\ [])
+  def get_user(email, [scope: scope, model: model]) do
+    %{repo: repo, identity_field: id} = Authsense.config(model)
+
+    scoped_model = case validate_scope(scope) do
+      {:ok, final_model} -> final_model
+      {:error, error} -> raise Authsense.InvalidScopeException, error
+    end
+
+    repo.get_by(scoped_model, [{id, email}])
+  end
+
+  def get_user(email, opts) do
     %{repo: repo, model: model, identity_field: id} =
-      Authsense.config(model)
+      Authsense.config(Keyword.get(opts, :model))
 
     repo.get_by(model, [{id, email}])
   end
@@ -139,4 +166,15 @@ defmodule Authsense.Service do
   end
 
   defp auth_failure(_opts, _), do: nil
+
+  defp validate_scope(scope) when is_function(scope) do
+    final_model = scope.()
+    case final_model do
+      %Ecto.Query{} -> {:ok, final_model}
+      _ -> {:error, "The scope lambda's return value should be of type Ecto.Query"}
+    end
+  end
+
+  defp validate_scope(%Ecto.Query{} = scope), do: {:ok, scope}
+  defp validate_scope(_scope), do: {:error, "The scope should be of type Ecto.Query"}
 end
