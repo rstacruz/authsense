@@ -1,3 +1,12 @@
+## [v0.4.0]
+> Sep 27, 2017
+
+- [#5] - Allow passing of scopes. (@jekku)
+
+[v0.4.0]: https://github.com/rstacruz/authsense/compare/v0.3.0...v0.4.0
+[#5]: https://github.com/rstacruz/authsense/issues/5
+[@jekku]: https://github.com/jekku
+
 ## [v0.3.0]
 > Jun 27, 2016
 
