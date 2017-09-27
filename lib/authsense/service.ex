@@ -45,7 +45,7 @@ defmodule Authsense.Service do
   Scope can be lambda that returns an `Ecto.Queryable`, an `Ecto.Query`, or an `Ecto.Queryable`
   This will override the model with a prepared queryable.
 
-      %User
+      %User{}
       |> change(%{ email: "rico@gmail.com", password: "password})
       |> authenticate([scope: User |> where(:field_for_filtering, ^somevar))
   """

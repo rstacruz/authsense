@@ -3,6 +3,6 @@ defmodule Authsense.Test.User do
   schema "" do
     field :email, :string
     field :hashed_password, :string
-    timestamps
+    timestamps()
   end
 end

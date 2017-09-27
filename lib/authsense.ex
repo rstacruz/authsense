@@ -134,23 +134,23 @@ defmodule Authsense do
   def config([]), do: config(nil)
   def config(nil) do
     cond do
-      length(all_config) > 1 ->
+      length(all_config()) > 1 ->
         raise Authsense.MultipleResourcesException
 
-      all_config == [] -> # Runtime guard
+      all_config() == [] -> # Runtime guard
         raise Authsense.UnconfiguredException
 
       true ->
-        [{model, _opts}] = all_config
-        merge_with_defaults(all_config, model)
+        [{model, _opts}] = all_config()
+        merge_with_defaults(all_config(), model)
     end
   end
 
   def config(opts) when is_list(opts),
-    do: Enum.into(opts, merge_with_defaults(all_config, opts[:model]))
+    do: Enum.into(opts, merge_with_defaults(all_config(), opts[:model]))
 
   def config(model) when is_atom(model),
-    do: merge_with_defaults(all_config, model)
+    do: merge_with_defaults(all_config(), model)
 
   defp all_config, do: Application.get_all_env(:authsense)
 
