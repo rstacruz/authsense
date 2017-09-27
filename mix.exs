@@ -1,7 +1,7 @@
 defmodule Authsense.Mixfile do
   use Mix.Project
 
-  @version "0.4.1"
+  @version "0.4.0"
   @description """
   Sensible helpers for authentication for Phoenix/Ecto.
   """
@@ -10,7 +10,7 @@ defmodule Authsense.Mixfile do
     [app: :authsense,
      version: @version,
      description: @description,
-     elixir: "~> 1.2",
+     elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -25,29 +25,20 @@ defmodule Authsense.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :ecto]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 1.0"},
-      {:plug, "~> 1.0"},
-      {:comeonin, "~> 2.4"},
+      {:ecto, "~> 2.2"},
+      {:plug, "~> 1.4"},
+      {:comeonin, "~> 4.0"},
+      {:pbkdf2_elixir, "~> 0.12", only: [:dev, :test]},
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
-      {:postgrex, "~> 0.11", only: :test}
+      {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
 
