@@ -1,7 +1,7 @@
 defmodule Authsense.Mixfile do
   use Mix.Project
 
-  @version "0.4.1"
+  @version "0.4.0"
   @description """
   Sensible helpers for authentication for Phoenix/Ecto.
   """
@@ -25,7 +25,7 @@ defmodule Authsense.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :ecto]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -42,12 +42,11 @@ defmodule Authsense.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 1.0"},
-      {:plug, "~> 1.0"},
-      {:comeonin, "~> 2.4"},
+      {:ecto, ">= 1.0.0"},
+      {:plug, ">= 1.0.0"},
+      {:comeonin, ">= 2.4.0"},
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
-      {:postgrex, "~> 0.11", only: :test}
+      {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
 
