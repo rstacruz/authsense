@@ -1,3 +1,10 @@
+## [v0.4.1]
+> Sep 27, 2017
+
+- Restrict versions to old Ecto and Comeonin versions for now :(
+
+[v0.4.1]: https://github.com/rstacruz/authsense/compare/v0.4.0...v0.4.1
+
 ## [v0.4.0]
 > Sep 27, 2017
 

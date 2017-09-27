@@ -1,7 +1,7 @@
 defmodule Authsense.Mixfile do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.4.1"
   @description """
   Sensible helpers for authentication for Phoenix/Ecto.
   """

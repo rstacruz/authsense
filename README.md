@@ -1,4 +1,4 @@
-# Authsense
+, Authsense
 
 > Sensible authentication helpers for Phoenix/Ecto
 
@@ -10,7 +10,7 @@ Add authsense to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:authsense, "~> 0.4.0"}]
+  [{:authsense, "~> 0.4.1"}]
 end
 ```
 
