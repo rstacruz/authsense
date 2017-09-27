@@ -94,7 +94,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate/2">authenticate(changeset_or_tuple, model \\ nil)</a>
+    <a href="#authenticate/2">authenticate(changeset_or_tuple, opts \\ [])</a>
   </div>
   
     <div class="summary-synopsis"><p>Checks if someone can authenticate with a given username/password pair</p>
@@ -103,7 +103,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#authenticate_user/2">authenticate_user(changeset_or_tuple, model \\ nil)</a>
+    <a href="#authenticate_user/2">authenticate_user(changeset_or_tuple, opts \\ [])</a>
   </div>
   
     <div class="summary-synopsis"><p>Returns the user associated with these credentials. Returns the User record
@@ -122,7 +122,7 @@ on success, or <code class="inline">false</code> on error</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_user/2">get_user(email, model \\ nil)</a>
+    <a href="#get_user/2">get_user(email, opts \\ [])</a>
   </div>
   
     <div class="summary-synopsis"><p>Loads a user by a given identity field value. Returns a nil on failure</p>
@@ -155,9 +155,9 @@ on success, or <code class="inline">false</code> on error</p>
     <a href="#authenticate/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate(changeset_or_tuple, model \\ nil)</span>
+    <span class="signature">authenticate(changeset_or_tuple, opts \\ [])</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L44" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L53" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -191,6 +191,12 @@ used as a tuple, it returns <code class="inline">{:error, nil}</code> on failure
       render(conn, &quot;login.html&quot;, changeset: changeset)
   end
 end</code></pre>
+<p>It’s also possible to add opts as a second parameter, which may contain a keyword scope.
+Scope can be lambda that returns an <code class="inline">Ecto.Queryable</code>, an <code class="inline">Ecto.Query</code>, or an <code class="inline">Ecto.Queryable</code>
+This will override the model with a prepared queryable.</p>
+<pre><code class="elixir">%User
+|&gt; change(%{ email: &quot;rico@gmail.com&quot;, password: &quot;password})
+|&gt; authenticate([scope: User |&gt; where(:field_for_filtering, ^somevar))</code></pre>
 
   </section>
 </div>
@@ -199,9 +205,9 @@ end</code></pre>
     <a href="#authenticate_user/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">authenticate_user(changeset_or_tuple, model \\ nil)</span>
+    <span class="signature">authenticate_user(changeset_or_tuple, opts \\ [])</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L73" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -224,7 +230,7 @@ authenticate_user({ email, password })</code></pre>
     </a>
     <span class="signature">generate_hashed_password(changeset, model \\ nil)</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L118" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L145" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -257,9 +263,9 @@ end</code></pre>
     <a href="#get_user/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_user(email, model \\ nil)</span>
+    <span class="signature">get_user(email, opts \\ [])</span>
     
-      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L88" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rstacruz/authsense/blob/v0.3.0/lib/authsense/service.ex#L103" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
