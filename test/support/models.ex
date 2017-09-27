@@ -1,5 +1,5 @@
 defmodule Authsense.Test.User do
-  use Ecto.Model
+  use Ecto.Schema
   schema "" do
     field :email, :string
     field :hashed_password, :string
