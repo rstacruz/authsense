@@ -16,9 +16,9 @@ defmodule Authsense.Mixfile do
      start_permanent: Mix.env == :prod,
      source_url: "https://github.com/rstacruz/authsense",
      homepage_url: "https://github.com/rstacruz/authsense",
-     docs: docs,
-     package: package,
-     deps: deps]
+     docs: docs(),
+     package: package(),
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -42,12 +42,12 @@ defmodule Authsense.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, ">= 1.0.0"},
-      {:plug, ">= 1.0.0"},
-      {:comeonin, ">= 2.4.0"},
+      {:ecto, "~> 1.0"},
+      {:plug, "~> 1.0"},
+      {:comeonin, "~> 2.4"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
-      {:postgrex, "~> 0.11.2", only: :test}
+      {:postgrex, "~> 0.11", only: :test}
     ]
   end
 
