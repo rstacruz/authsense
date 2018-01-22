@@ -1,3 +1,16 @@
+## [v1.0.0]
+> Jan 22, 2018
+
+Thanks [@jekku]!
+
+- [#7] - Update to Ecto 2.2 (from 1.1).
+- [#7] - Update to Elixir 1.5 (from 1.2).
+- [#7] - Update to Comeonin 4.0 (from 2.4).
+
+[v1.0.0]: https://github.com/rstacruz/authsense/compare/v0.4.1...v1.0.0
+[#7]: https://github.com/rstacruz/authsense/issues/7
+[@jekku]: https://github.com/jekku
+
 ## [v0.4.1]
 > Sep 27, 2017
 

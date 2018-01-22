@@ -10,7 +10,7 @@ Add authsense to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:authsense, "~> 0.4.1"}]
+  [{:authsense, "~> 1.0.0"}]
 end
 ```
 
@@ -56,7 +56,7 @@ Please consult the [Authsense documentation](http://ricostacruz.com/authsense/) 
 
 ## Thanks
 
-**authsense** © 2016+, Rico Sta. Cruz. Released under the [MIT] License.<br>
+**authsense** © 2016-2017, Rico Sta. Cruz. Released under the [MIT] License.<br>
 Authored and maintained by Rico Sta. Cruz with help from contributors ([list][contributors]).
 
 > [ricostacruz.com](http://ricostacruz.com) &nbsp;&middot;&nbsp;
