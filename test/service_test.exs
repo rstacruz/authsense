@@ -41,7 +41,7 @@ defmodule AuthsenseServiceTest do
     |> change(%{email: "rico@gmail.com", password: "nope"})
     |> Service.authenticate()
 
-    assert changeset.errors == [password: "Invalid credentials."]
+    assert changeset.errors == [password: {"Invalid credentials.", []}]
   end
 
   test "authenticate via password" do
