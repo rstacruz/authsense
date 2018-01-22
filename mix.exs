@@ -10,7 +10,7 @@ defmodule Authsense.Mixfile do
     [app: :authsense,
      version: @version,
      description: @description,
-     elixir: "~> 1.2",
+     elixir: "~> 1.5",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
