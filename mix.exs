@@ -10,7 +10,7 @@ defmodule Authsense.Mixfile do
     [app: :authsense,
      version: @version,
      description: @description,
-     elixir: "~> 1.2",
+     elixir: "~> 1.5",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -42,9 +42,10 @@ defmodule Authsense.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 1.0"},
+      {:ecto, "~> 2.0"},
       {:plug, "~> 1.0"},
-      {:comeonin, "~> 2.4"},
+      {:comeonin, "~> 4.0"},
+      {:pbkdf2_elixir, "~> 0.12"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:postgrex, "~> 0.11", only: :test}
