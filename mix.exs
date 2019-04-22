@@ -7,8 +7,7 @@ defmodule Authsense.Mixfile do
   """
 
   def project do
-    [app: :authsense,
-     version: @version,
+    [app: :authsense, version: @version,
      description: @description,
      elixir: "~> 1.5",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -42,7 +41,7 @@ defmodule Authsense.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 2.0"},
+      {:ecto, "~> 3.0"},
       {:plug, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:pbkdf2_elixir, "~> 0.12"},
