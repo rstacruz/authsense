@@ -89,7 +89,7 @@ defmodule Authsense.Service do
     if user do
       crypto.check_pass(user, password, hash_key: hashed_passwd_field)
     else
-      crypto.dummy_checkpw
+      crypto.no_user_verify()
     end
   end
 
