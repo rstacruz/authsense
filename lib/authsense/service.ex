@@ -55,8 +55,8 @@ defmodule Authsense.Service do
   def authenticate(credentials, opts) do
     model = Keyword.get(opts, :model)
     case authenticate_user(credentials, opts) do
-      false -> {:error, auth_failure(credentials, model)}
-      user -> {:ok, user}
+      {:error, _error} -> {:error, auth_failure(credentials, model)}
+      {:ok, user} -> {:ok, user}
     end
   end
 
@@ -82,13 +82,12 @@ defmodule Authsense.Service do
   end
 
   def authenticate_user({email, password}, opts) do
-    %{crypto: crypto, hashed_password_field: hashed_passwd} =
+    %{crypto: crypto, hashed_password_field: hashed_passwd_field} =
       Authsense.config(Keyword.get(opts, :model))
 
     user = get_user(email, opts)
-
     if user do
-      crypto.checkpw(password, Map.get(user, hashed_passwd)) && user
+      crypto.check_pass(user, password, hash_key: hashed_passwd_field)
     else
       crypto.dummy_checkpw
     end
@@ -151,7 +150,7 @@ defmodule Authsense.Service do
         changeset
       password ->
         changeset
-        |> put_change(hashed_passwd, crypto.hashpwsalt(password))
+        |> put_change(hashed_passwd, crypto.hash_pwd_salt(password))
     end
   end
 
