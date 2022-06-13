@@ -77,9 +77,8 @@ defmodule Authsense do
     raise Authsense.UnconfiguredException
   end
 
-  @doc false
   @defaults %{
-    crypto: Comeonin.Pbkdf2,
+    crypto: Pbkdf2,
     identity_field: :email,
     password_field: :password,
     hashed_password_field: :hashed_password,

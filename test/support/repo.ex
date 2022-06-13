@@ -10,7 +10,7 @@ defmodule Authsense.Test.Repo do
   def get_by(_model, _email), do: nil
 
   defp valid_resource(email, password) do
-    %User{id: 1, email: email, hashed_password: crypto().hashpwsalt(password)}
+    %User{id: 1, email: email, hashed_password: crypto().hash_pwd_salt(password)}
   end
 
   defp crypto do
