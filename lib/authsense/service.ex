@@ -90,6 +90,7 @@ defmodule Authsense.Service do
       crypto.check_pass(user, password, hash_key: hashed_passwd_field)
     else
       crypto.no_user_verify()
+      {:error, "no_user"}
     end
   end
 

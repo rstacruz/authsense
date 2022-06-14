@@ -45,7 +45,7 @@ defmodule AuthsenseServiceTest do
   end
 
   test "authenticate via password" do
-    assert {:error, nil} == Service.authenticate({"rico@gmail.com", "nope"})
+    assert {:error, nil} = Service.authenticate({"rico@gmail.com", "nope"})
   end
 
   test "get_user" do
@@ -54,6 +54,10 @@ defmodule AuthsenseServiceTest do
 
   test "get_user failure" do
     assert Service.get_user("nobody@gmail.com") == nil
+  end
+
+  test "authenticate no_user" do
+    assert {:error, _} = Service.authenticate({"nobody@gmail.com", "nope"})
   end
 
   test "authenticate with Ecto.Queryable scope and retrieve correctly" do
